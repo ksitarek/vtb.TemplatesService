@@ -4,7 +4,6 @@ using NUnit.Framework;
 
 namespace vtb.TemplatesService.DataAccess.Tests
 {
-    [NonParallelizable]
     public abstract class MongoDbTests
     {
         private MongoDbRunner _runner;
