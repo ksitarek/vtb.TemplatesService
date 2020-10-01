@@ -62,7 +62,7 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
             _templatesRepositoryMock.Setup(x => x.GetTemplateWithActiveVersionOnly(template.TemplateId, ct))
                 .ReturnsAsync(template).Verifiable();
 
-            Assert.ThrowsAsync<CannotRemoveActiveTemplateVersion>(async () => await _manager.RemoveTemplateVersion(template.TemplateId, templateVersionId, ct));
+            Assert.ThrowsAsync<CannotRemoveActiveTemplateVersionException>(async () => await _manager.RemoveTemplateVersion(template.TemplateId, templateVersionId, ct));
 
             _templatesRepositoryMock.Verify();
         }
