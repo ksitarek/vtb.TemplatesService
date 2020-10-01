@@ -13,7 +13,7 @@ namespace vtb.TemplatesService.DataAccess.Tests
         public void CreateConnection()
         {
             _runner = MongoDbRunner.Start(singleNodeReplSet: true, singleNodeReplSetWaitTimeout: 10);
-    
+
             var mongoClient = new MongoClient(_runner.ConnectionString);
             _database = mongoClient.GetDatabase("test_db");
         }
