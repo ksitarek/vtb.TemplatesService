@@ -23,7 +23,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Require_ManageTemplates_Permission()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), Array.Empty<string>());
             Assert.ThrowsAsync<HttpResponseForbiddenException>(async () =>
                 await _client.RemoveTemplate(_template1.TemplateId));
         }
@@ -31,11 +31,11 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public async Task Will_Remove_Template()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             await _client.RemoveTemplate(_template1.TemplateId);
             Assert.ThrowsAsync<HttpResponseNotFoundException>(async () => await _client.Get(_template1.TemplateId));
 
-            Authorize(Guid.NewGuid(), Tenant2Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant2Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             await _client.RemoveTemplate(_template2.TemplateId);
             Assert.ThrowsAsync<HttpResponseNotFoundException>(async () => await _client.Get(_template2.TemplateId));
         }
@@ -43,7 +43,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Not_Remove_Template_Owned_By_Other_Tenant()
         {
-            Authorize(Guid.NewGuid(), Tenant2Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant2Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             Assert.ThrowsAsync<HttpResponseNotFoundException>(async () => await _client.RemoveTemplate(_template1.TemplateId));
         }
     }

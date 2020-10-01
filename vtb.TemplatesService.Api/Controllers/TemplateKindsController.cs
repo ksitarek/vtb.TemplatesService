@@ -20,7 +20,6 @@ namespace vtb.TemplatesService.Api.Controllers
     [Authorize]
     public class TemplateKindsController : SafeControllerBase
     {
-        private readonly ILogger<TemplateKindsController> _logger;
         private readonly IMapper _mapper;
         private readonly ITemplateKindManager _templateKindManager;
 
@@ -29,7 +28,6 @@ namespace vtb.TemplatesService.Api.Controllers
             IMapper mapper,
             ITemplateKindManager templateKindManager) : base(logger)
         {
-            _logger = logger;
             _mapper = mapper;
             _templateKindManager = templateKindManager;
 
