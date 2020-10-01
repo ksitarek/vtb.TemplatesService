@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace vtb.TemplatesService.BusinessLogic.Exceptions
 {
+    [Serializable]
     public class TemplateCreationFailedException : Exception
     {
         public string TemplateKindKey { get; }

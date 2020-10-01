@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace vtb.TemplatesService.BusinessLogic.Exceptions
 {
+    [Serializable]
     public class TemplateVersionCreationFailedException : Exception
     {
         public Guid TemplateId { get; }

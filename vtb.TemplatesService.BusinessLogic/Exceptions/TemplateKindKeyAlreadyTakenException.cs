@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace vtb.TemplatesService.BusinessLogic.Exceptions
 {
+    [Serializable]
     public class TemplateKindKeyAlreadyTakenException : Exception
     {
         public string TemplateKindKey { get; }
