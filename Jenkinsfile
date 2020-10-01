@@ -50,7 +50,7 @@ pipeline {
                         --logger "trx" \
                         /p:CollectCoverage=true \
                         /p:CoverletOutputFormat="opencover" \
-                        /p:CoverletOutput=./
+                        /p:CoverletOutput=vtb.TemplatesService.BusinessLogic.Tests/
                 '''
                 sh '''\
                     dotnet test vtb.TemplatesService.DataAccess.Tests/vtb.TemplatesService.DataAccess.Tests.csproj \
@@ -59,7 +59,7 @@ pipeline {
                         --logger "trx" \
                         /p:CollectCoverage=true \
                         /p:CoverletOutputFormat="opencover" \
-                        /p:CoverletOutput=./
+                        /p:CoverletOutput=vtb.TemplatesService.DataAccess.Tests/
                 '''
                 sh '''\
                     dotnet test vtb.TemplatesService.Api.Tests/vtb.TemplatesService.Api.Tests.csproj \
@@ -68,7 +68,7 @@ pipeline {
                         --logger "trx" \
                         /p:CollectCoverage=true \
                         /p:CoverletOutputFormat="opencover" \
-                        /p:CoverletOutput=./
+                        /p:CoverletOutput=vtb.TemplatesService.Api.Tests/
                 '''
                 mstest()
             }
