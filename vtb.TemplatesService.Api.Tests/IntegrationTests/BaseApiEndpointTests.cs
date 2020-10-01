@@ -17,6 +17,7 @@ using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.Api.Tests.IntegrationTests
 {
+    [NonParallelizable]
     public abstract class BaseApiEndpointTests
     {
         internal ApiFactory _factory;

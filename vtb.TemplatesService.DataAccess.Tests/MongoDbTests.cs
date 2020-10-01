@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace vtb.TemplatesService.DataAccess.Tests
 {
+    [NonParallelizable]
     public abstract class MongoDbTests
     {
         private MongoDbRunner _runner;
@@ -13,7 +14,7 @@ namespace vtb.TemplatesService.DataAccess.Tests
         public void CreateConnection()
         {
             _runner = MongoDbRunner.Start(singleNodeReplSet: true, singleNodeReplSetWaitTimeout: 10);
-    
+
             var mongoClient = new MongoClient(_runner.ConnectionString);
             _database = mongoClient.GetDatabase("test_db");
         }

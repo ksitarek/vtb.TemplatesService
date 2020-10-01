@@ -40,7 +40,19 @@ pipeline {
                 sh 'dotnet build -p:Version=${VERSION} -c Release --no-restore'
             }
         }
-        stage('Run All Tests') {      
+        stage('Run All Tests') {
+            // steps {
+            //     sh '''\
+            //         dotnet test \
+            //             -c Release \
+            //             --no-build \
+            //             --logger "trx" \
+            //             /p:CollectCoverage=true \
+            //             /p:CoverletOutputFormat="opencover" \
+            //             /p:CoverletOutput=./
+            //     '''
+            //     mstest()
+            // }            
             steps {
                 sh '''\
                     dotnet test \
@@ -48,7 +60,6 @@ pipeline {
                         --no-build \
                         --logger "trx" \
                         /p:CollectCoverage=true \
-                        /p:ParallelizeTestCollections=false \
                         /p:CoverletOutputFormat="opencover" \
                         /p:CoverletOutput=./
                 '''
