@@ -40,16 +40,35 @@ pipeline {
                 sh 'dotnet build -p:Version=${VERSION} -c Release --no-restore'
             }
         }
-        stage('Run All Tests') {
+        stage('Run All Tests') {        
             steps {
+                // workaround to run tests sequentially as Mongo2Go doesn't really like parallelism
                 sh '''\
-                    dotnet test \
+                    dotnet test vtb.TemplatesService.BusinessLogic.Tests/vtb.TemplatesService.BusinessLogic.Tests.csproj \
                         -c Release \
                         --no-build \
                         --logger "trx" \
                         /p:CollectCoverage=true \
                         /p:CoverletOutputFormat="opencover" \
-                        /p:CoverletOutput=./
+                        /p:CoverletOutput=vtb.TemplatesService.BusinessLogic.Tests/
+                '''
+                sh '''\
+                    dotnet test vtb.TemplatesService.DataAccess.Tests/vtb.TemplatesService.DataAccess.Tests.csproj \
+                        -c Release \
+                        --no-build \
+                        --logger "trx" \
+                        /p:CollectCoverage=true \
+                        /p:CoverletOutputFormat="opencover" \
+                        /p:CoverletOutput=vtb.TemplatesService.DataAccess.Tests/
+                '''
+                sh '''\
+                    dotnet test vtb.TemplatesService.Api.Tests/vtb.TemplatesService.Api.Tests.csproj \
+                        -c Release \
+                        --no-build \
+                        --logger "trx" \
+                        /p:CollectCoverage=true \
+                        /p:CoverletOutputFormat="opencover" \
+                        /p:CoverletOutput=vtb.TemplatesService.Api.Tests/
                 '''
                 mstest()
             }

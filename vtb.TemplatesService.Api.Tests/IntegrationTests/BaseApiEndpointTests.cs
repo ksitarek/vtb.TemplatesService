@@ -12,8 +12,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using vtb.Auth.Jwt;
 using vtb.TemplatesService.Api.Tests.IntegrationTests.ExpectedResults;
-using vtb.TemplatesService.DataAccess.Seed;
-using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.Api.Tests.IntegrationTests
 {
@@ -46,14 +44,10 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         public async Task SetUpHarness()
         {
             _factory = new ApiFactory();
-
-            var seeder = new Seeder(_factory.Services.GetService<IMongoDatabase>());
-            await seeder.Seed<TemplateKind>(typeof(TemplateKinds));
-            await seeder.Seed<Template>(typeof(Templates));
         }
 
         [SetUp]
-        public void SetUpHttpClient()
+        public async Task SetUpHttpClient()
         {
             _httpClient = _factory.CreateClient();
         }

@@ -6,12 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 using vtb.Auth.Jwt;
 using vtb.Auth.Permissions;
 using vtb.Auth.Tenant;
 using vtb.TemplatesService.BusinessLogic;
 using vtb.TemplatesService.BusinessLogic.Managers;
 using vtb.TemplatesService.DataAccess.Repositories;
+using vtb.TemplatesService.DataAccess.Seed;
+using vtb.TemplatesService.DomainModel;
 using vtb.Utils.Extensions;
 
 namespace vtb.TemplatesService.Api
@@ -132,6 +135,21 @@ namespace vtb.TemplatesService.Api
             {
                 endpoints.MapControllers();
             });
+
+            var db = app.ApplicationServices.GetService<IMongoDatabase>();
+            var templateKinds = db.GetCollection<TemplateKind>(nameof(TemplateKinds));
+
+            if (templateKinds.CountDocuments(Builders<TemplateKind>.Filter.Empty) == 0)
+            {
+                var seeder = new Seeder(db);
+
+                var tasks = new[] {
+                    seeder.Seed<TemplateKind>(typeof(TemplateKinds)),
+                    seeder.Seed<Template>(typeof(Templates))
+                };
+
+                Task.WaitAll(tasks);
+            }
         }
     }
 }
