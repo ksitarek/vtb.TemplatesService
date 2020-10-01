@@ -27,7 +27,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Require_ManageTemplates_Permission()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), Array.Empty<string>());
             Assert.ThrowsAsync<HttpResponseForbiddenException>(async () =>
                 await _client.RemoveTemplateVersion(_template1.TemplateId, _template1Version2.TemplateVersionId));
         }
@@ -35,13 +35,13 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public async Task Will_Remove_Template_Version()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             await _client.RemoveTemplateVersion(_template1.TemplateId, _template1Version2.TemplateVersionId);
 
             Assert.ThrowsAsync<HttpResponseNotFoundException>(async ()
                 => await _client.GetTemplateVersionDetails(_template1.TemplateId, _template1Version2.TemplateVersionId));
 
-            Authorize(Guid.NewGuid(), Tenant2Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant2Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             await _client.RemoveTemplateVersion(_template2.TemplateId, _template2Version2.TemplateVersionId);
 
             Assert.ThrowsAsync<HttpResponseNotFoundException>(async ()
@@ -51,7 +51,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Not_Remove_TemplateVersion_From_Template_Owned_By_Other_Tenant()
         {
-            Authorize(Guid.NewGuid(), Tenant2Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant2Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             Assert.ThrowsAsync<HttpResponseNotFoundException>(async ()
                 => await _client.RemoveTemplateVersion(_template1.TemplateId, _template1Version2.TemplateVersionId));
         }
@@ -59,12 +59,12 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public async Task Will_Not_Remove_Active_TemplateVersion()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             Assert.ThrowsAsync<HttpResponseConflictException>(async ()
                 => await _client.RemoveTemplateVersion(_template1.TemplateId, _template1Version1Active.TemplateVersionId));
             await _client.GetTemplateVersionDetails(_template1.TemplateId, _template1Version1Active.TemplateVersionId);
 
-            Authorize(Guid.NewGuid(), Tenant2Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant2Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             Assert.ThrowsAsync<HttpResponseConflictException>(async ()
                 => await _client.RemoveTemplateVersion(_template2.TemplateId, _template2Version1Active.TemplateVersionId));
             await _client.GetTemplateVersionDetails(_template2.TemplateId, _template2Version1Active.TemplateVersionId);

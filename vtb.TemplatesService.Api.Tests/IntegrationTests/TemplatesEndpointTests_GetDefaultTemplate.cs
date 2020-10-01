@@ -22,7 +22,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Return_NotFound_When_Not_Set()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), Array.Empty<string>());
             Assert.ThrowsAsync<HttpResponseNotFoundException>(async () =>
                 await _client.GetDefaultTemplate(TemplateKinds.EmailTemplateKind.TemplateKindKey));
         }
@@ -33,10 +33,10 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
             var expectedDetails1 = ExpectedTemplateDetails.From(Templates.Tenant1FirstInvoiceTemplate);
             var expectedDetails2 = ExpectedTemplateDetails.From(Templates.Tenant2FirstInvoiceTemplate);
 
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), Array.Empty<string>());
             var receivedDetails1 = await _client.GetDefaultTemplate(_templateKindKey);
 
-            Authorize(Guid.NewGuid(), Tenant2Id, new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Tenant2Id, Array.Empty<string>(), Array.Empty<string>());
             var receivedDetails2 = await _client.GetDefaultTemplate(_templateKindKey);
 
             receivedDetails1.Should().BeEquivalentTo(expectedDetails1);
