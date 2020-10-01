@@ -62,7 +62,7 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
         }
 
         [Test]
-        public async Task Will_Throw_TemplateNotFoundException_When_Template_Not_Found()
+        public void Will_Throw_TemplateNotFoundException_When_Template_Not_Found()
         {
             var page = 1;
             var pageSize = 2;

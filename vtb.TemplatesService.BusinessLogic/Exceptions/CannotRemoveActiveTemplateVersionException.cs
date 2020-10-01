@@ -2,9 +2,9 @@
 
 namespace vtb.TemplatesService.BusinessLogic.Exceptions
 {
-    public class CannotRemoveActiveTemplateVersion : Exception
+    public class CannotRemoveActiveTemplateVersionException : Exception
     {
-        public CannotRemoveActiveTemplateVersion(Guid templateId, Guid templateVersionId)
+        public CannotRemoveActiveTemplateVersionException(Guid templateId, Guid templateVersionId)
             : base($"Could not remove templave version with Id: {templateVersionId} of tehmplate with Id: {templateId}. The version is active.")
         {
             TemplateId = templateId;
