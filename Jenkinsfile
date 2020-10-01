@@ -41,9 +41,21 @@ pipeline {
             }
         }
         stage('Run All Tests') {
+            // steps {
+            //     sh '''\
+            //         dotnet test \
+            //             -c Release \
+            //             --no-build \
+            //             --logger "trx" \
+            //             /p:CollectCoverage=true \
+            //             /p:CoverletOutputFormat="opencover" \
+            //             /p:CoverletOutput=./
+            //     '''
+            //     mstest()
+            // }            
             steps {
                 sh '''\
-                    dotnet test \
+                    dotnet test vtb.TemplatesService.DataAccess.Tests\vtb.TemplatesService.DataAccess.Tests.csproj \
                         -c Release \
                         --no-build \
                         --logger "trx" \
