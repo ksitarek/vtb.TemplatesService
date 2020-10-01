@@ -55,7 +55,7 @@ pipeline {
             // }            
             steps {
                 sh '''\
-                    dotnet test vtb.TemplatesService.DataAccess.Tests\vtb.TemplatesService.DataAccess.Tests.csproj \
+                    dotnet test vtb.TemplatesService.DataAccess.Tests/vtb.TemplatesService.DataAccess.Tests.csproj \
                         -c Release \
                         --no-build \
                         --logger "trx" \
