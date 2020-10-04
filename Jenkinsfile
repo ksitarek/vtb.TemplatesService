@@ -97,17 +97,15 @@ pipeline {
             }
         }
         stage('Run Release') {
-            agent any
-            when {
-                branch: 'docker_release'
-            }
             steps {
-                build job: 
-                    'Release-vtb.TemplatesService', 
-                    parameters: [
-                        string(name: 'DockerImageTag', value: '${IMAGE_NAME}'), 
-                        string(name: 'BranchName', value: '${BRANCH_NAME}')
-                    ]
+                if (BRANCH_NAME == "master") {                
+                    build job: 
+                        'Release-vtb.TemplatesService', 
+                        parameters: [
+                            string(name: 'DockerImageTag', value: '${IMAGE_NAME}'), 
+                            string(name: 'BranchName', value: '${BRANCH_NAME}')
+                        ]
+                }
             }
         }
     }
