@@ -98,7 +98,7 @@ pipeline {
         }
         stage('Run Release') {
             when {
-                expression { BRANCH_NAME == 'docker_release' }
+                expression { BRANCH_NAME == 'master' }
             }
             steps {          
                 build wait: false, job: 'Templates Service/Release-vtb.TemplatesService', 
