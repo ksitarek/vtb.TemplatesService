@@ -101,9 +101,7 @@ pipeline {
                 expression { BRANCH_NAME == 'docker_release' }
             }
             steps {          
-                build   
-                    wait: false, 
-                    job: 'Templates Service/Release-vtb.TemplatesService', 
+                build wait: false, job: 'Templates Service/Release-vtb.TemplatesService', 
                     parameters: [
                         string(name: 'DockerImageTag', value: IMAGE_NAME), 
                         string(name: 'BranchName', value: BRANCH_NAME)
