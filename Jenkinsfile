@@ -96,6 +96,18 @@ pipeline {
                 }
             }
         }
+        stage('Run Release') {
+            when {
+                expression { BRANCH_NAME == 'master' }
+            }
+            steps {          
+                build wait: false, job: 'Templates Service/Release-vtb.TemplatesService', 
+                    parameters: [
+                        string(name: 'DockerImageTag', value: IMAGE_NAME), 
+                        string(name: 'BranchName', value: BRANCH_NAME)
+                    ]
+            }
+        }
     }
 
     post {
