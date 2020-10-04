@@ -98,7 +98,7 @@ pipeline {
         }
         stage('Run Release') {
             when {
-                expression { BRANCH_NAME == 'master' }
+                expression { BRANCH_NAME == 'docker_release' }
             }
             steps {             
                 build job: 
