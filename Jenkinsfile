@@ -97,6 +97,9 @@ pipeline {
             }
         }
         stage('Run Release') {
+            when {
+                branch: 'docker_release'
+            }
             steps {
                 build job: 
                     'Release-vtb.TemplatesService', 
