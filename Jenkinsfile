@@ -102,7 +102,7 @@ pipeline {
             }
             steps {             
                 build job: 
-                    'Release-vtb.TemplatesService', 
+                    'Templates Service/Release-vtb.TemplatesService', 
                     parameters: [
                         string(name: 'DockerImageTag', value: '${IMAGE_NAME}'), 
                         string(name: 'BranchName', value: '${BRANCH_NAME}')
