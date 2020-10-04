@@ -97,6 +97,7 @@ pipeline {
             }
         }
         stage('Run Release') {
+            agent any
             when {
                 branch: 'docker_release'
             }
