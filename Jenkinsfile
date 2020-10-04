@@ -86,6 +86,9 @@ pipeline {
             }
         }
         stage('Dockerize') {
+            when {
+                expression { BRANCH_NAME == 'master' }
+            }
             steps {
                 sh 'dotnet publish vtb.TemplatesService.Api/vtb.TemplatesService.Api.csproj --no-build --no-restore -o ./out -c Release'
 
