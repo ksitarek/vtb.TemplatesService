@@ -13,7 +13,7 @@ using vtb.TemplatesService.DataAccess.Repositories;
 
 namespace vtb.TemplatesService.Service
 {
-    internal class Program
+    internal static class Program
     {
         private static IConfigurationRoot Configuration;
         private static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();

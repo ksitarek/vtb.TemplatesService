@@ -20,7 +20,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Return_404_For_Other_Tenant_Entities()
         {
-            Authorize(Guid.NewGuid(), Tenant2Id, new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Tenant2Id, Array.Empty<string>(), Array.Empty<string>());
             Assert.ThrowsAsync<HttpResponseNotFoundException>(async () =>
                 await _client.Get(Templates.Tenant1FirstInvoiceTemplate.TemplateId));
         }
@@ -28,7 +28,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public async Task Will_Return_TemplateDetails()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), Array.Empty<string>());
 
             var expectedDetails = ExpectedTemplateDetails.From(Templates.Tenant1FirstInvoiceTemplate);
             var receivedDetails = await _client.Get(expectedDetails.TemplateId);

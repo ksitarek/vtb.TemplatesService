@@ -26,7 +26,6 @@ namespace vtb.TemplatesService.Api.Controllers
             catch (Exception e)
             {
                 var exceptionType = e.GetType();
-                var message = e.Message;
 
                 var map = _exceptionToResponseMap;
                 if (overrides != null)
@@ -50,7 +49,7 @@ namespace vtb.TemplatesService.Api.Controllers
             IDictionary<Type, Func<IActionResult>> right)
         {
             var result = left.ToDictionary(x => x.Key, x => right.ContainsKey(x.Key) ? right[x.Key] : x.Value);
-            
+
             foreach (var (key, value) in right.Where(x => !result.ContainsKey(x.Key)))
                 result.Add(key, value);
 

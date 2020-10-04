@@ -28,7 +28,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Require_ManageTemplates_Permission()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), Array.Empty<string>());
             Assert.ThrowsAsync<HttpResponseForbiddenException>(async () =>
                 await _client.AddNewTemplate(_request));
         }
@@ -39,7 +39,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
             var label = Guid.NewGuid().ToString();
             _request.TemplateLabel = label;
 
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
 
             await _client.AddNewTemplate(_request);
 
@@ -61,7 +61,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
                 CurrentVersionCreatedAt = ApiFactory.UtcNow
             };
 
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             var uri1 = await _client.AddNewTemplate(_request);
 
             var createdTemplate1 = await _client.Get(Guid.Parse(uri1.Segments[3]));
@@ -71,7 +71,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
                 expectedTemplateDetails,
                 options => options.Excluding(o => o.TemplateId).Excluding(o => o.CurrentVersionId));
 
-            Authorize(Guid.NewGuid(), Tenant2Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant2Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             var uri2 = await _client.AddNewTemplate(_request);
 
             var createdTemplate2 = await _client.Get(Guid.Parse(uri2.Segments[3]));

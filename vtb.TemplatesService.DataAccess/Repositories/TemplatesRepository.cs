@@ -61,7 +61,6 @@ namespace vtb.TemplatesService.DataAccess.Repositories
                     PipelineStageDefinitionBuilder.Count<Template>(),
                 }));
 
-            var sortDefinition = Builders<Template>.Sort.Ascending(x => x.TemplateId);
             var entitiesFacet = AggregateFacet.Create(entitiesFacetName,
                 PipelineDefinition<Template, Template>.Create(new[]
                 {
