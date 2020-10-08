@@ -28,9 +28,9 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             _systemClock = systemClock;
         }
 
-        public async Task CreateTemplate(Guid templateId, string templateKindKey, string label, string content, CancellationToken cancellationToken)
+        public async Task CreateTemplate(Guid newTemplateId, string templateKindKey, string label, string content, CancellationToken cancellationToken)
         {
-            Check.GuidNotEmpty(templateId, nameof(templateId));
+            Check.GuidNotEmpty(newTemplateId, nameof(newTemplateId));
             Check.NotEmpty(templateKindKey, nameof(templateKindKey));
             Check.NotEmpty(label, nameof(label));
             Check.NotEmpty(content, nameof(content));
@@ -42,7 +42,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
 
             var template = new Template()
             {
-                TemplateId = templateId,
+                TemplateId = newTemplateId,
                 TemplateKindKey = templateKindKey,
                 Label = label,
                 Versions = new List<TemplateVersion>()
@@ -61,9 +61,9 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             }
         }
 
-        public async Task CreateTemplateVersion(Guid templateVersionId, Guid templateId, string content, bool isActive, CancellationToken cancellationToken)
+        public async Task CreateTemplateVersion(Guid newTemplateVersionId, Guid templateId, string content, bool isActive, CancellationToken cancellationToken)
         {
-            Check.GuidNotEmpty(templateVersionId, nameof(templateVersionId));
+            Check.GuidNotEmpty(newTemplateVersionId, nameof(newTemplateVersionId));
             Check.GuidNotEmpty(templateId, nameof(templateId));
             Check.NotEmpty(content, nameof(content));
 
@@ -73,7 +73,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
                 throw new TemplateNotFoundException(templateId);
             }
 
-            var templateVersion = BuildNewTemplateVersion(templateVersionId, content, isActive);
+            var templateVersion = BuildNewTemplateVersion(newTemplateVersionId, content, isActive);
 
             if (isActive)
             {
@@ -196,7 +196,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
 
             if (template.ActiveVersion.TemplateVersionId == templateVersionId)
             {
-                throw new CannotRemoveActiveTemplateVersion(templateId, templateVersionId);
+                throw new CannotRemoveActiveTemplateVersionException(templateId, templateVersionId);
             }
 
             if (!await _templatesRepository.TemplateVersionExists(templateId, templateVersionId, cancellationToken))

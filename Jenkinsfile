@@ -3,7 +3,7 @@ properties([pipelineTriggers([githubPush()])])
 pipeline {
     agent { dockerfile true }
     environment {
-        SONARQUBE_PROJECT_KEY = "vtb-templatesservice"
+        PROJECT_KEY = "vtb-templatesservice"
         SONARQUBE_TOKEN = credentials('SONARQUBE_TOKEN');
         SONARQUBE_URL = credentials('SONARQUBE_URL');
 
@@ -12,8 +12,15 @@ pipeline {
         BAGET_HOST = credentials('BAGET_HOST');
         BAGET_API_KEY = credentials('BAGET_API_KEY');
 
+        REGISTRY_HOST = credentials('REGISTRY_HOST');
+        REGISTRY_USERNAME = credentials('REGISTRY_USERNAME');
+        REGISTRY_PASSWORD = credentials('REGISTRY_PASSWORD');
+
         BRANCH_NAME = "${env.BRANCH_NAME}";
         VERSION = "1.0.${BUILD_NUMBER}"
+
+        COMMIT_HASH = "${GIT_COMMIT}"
+        IMAGE_NAME = "${REGISTRY_HOST}/${PROJECT_KEY}:${BRANCH_NAME}-latest"
     }
 
     stages {
@@ -21,7 +28,7 @@ pipeline {
             steps {
                 sh '''\
                     dotnet sonarscanner begin \
-                        /k:"${SONARQUBE_PROJECT_KEY}" \
+                        /k:"${PROJECT_KEY}" \
                         /d:sonar.login="${SONARQUBE_TOKEN}" \
                         /d:sonar.host.url="${SONARQUBE_URL}" \
                         /d:sonar.coverage.exclusions="*.Tests/" \
@@ -76,6 +83,32 @@ pipeline {
         stage('SCA Upload') {
             steps {
                 sh 'dotnet sonarscanner end /d:sonar.login="${SONARQUBE_TOKEN}"'
+            }
+        }
+        stage('Dockerize') {
+            when {
+                expression { BRANCH_NAME == 'master' }
+            }
+            steps {
+                sh 'dotnet publish vtb.TemplatesService.Api/vtb.TemplatesService.Api.csproj --no-build --no-restore -o ./out -c Release'
+
+                dir('out'){
+                    sh 'docker login ${REGISTRY_HOST} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}'
+                    sh 'docker build . -f ../Dockerfile.API -t ${IMAGE_NAME}'
+                    sh 'docker push ${IMAGE_NAME}'
+                }
+            }
+        }
+        stage('Run Release') {
+            when {
+                expression { BRANCH_NAME == 'master' }
+            }
+            steps {          
+                build wait: false, job: 'Templates Service/Release-vtb.TemplatesService', 
+                    parameters: [
+                        string(name: 'DockerImageTag', value: IMAGE_NAME), 
+                        string(name: 'BranchName', value: BRANCH_NAME)
+                    ]
             }
         }
     }

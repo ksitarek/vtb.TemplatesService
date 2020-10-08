@@ -8,7 +8,7 @@ namespace vtb.TemplatesService.DataAccess.Seed
 {
     public class Seeder
     {
-        private IMongoDatabase _database;
+        private readonly IMongoDatabase _database;
 
         public Seeder(IMongoDatabase database)
         {

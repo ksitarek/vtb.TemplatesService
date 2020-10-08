@@ -190,7 +190,7 @@ namespace vtb.TemplatesService.Api.Controllers
             _exceptionToResponseMap.Add(typeof(TemplateNotFoundException), NotFound);
             _exceptionToResponseMap.Add(typeof(TemplateVersionNotFoundException), NotFound);
             _exceptionToResponseMap.Add(typeof(TemplateLabelAlreadyTakenException), Conflict);
-            _exceptionToResponseMap.Add(typeof(CannotRemoveActiveTemplateVersion), Conflict);
+            _exceptionToResponseMap.Add(typeof(CannotRemoveActiveTemplateVersionException), Conflict);
         }
     }
 }

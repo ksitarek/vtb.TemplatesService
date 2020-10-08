@@ -27,7 +27,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Require_ManageTemplates_Permission()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), Array.Empty<string>());
             Assert.ThrowsAsync<HttpResponseForbiddenException>(async () =>
                 await _client.GetTemplateVersionDetails(_template1.TemplateId, _templateVersion1.TemplateVersionId));
         }
@@ -35,7 +35,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Return_NotFound_When_Cannot_Find_TemplateVersion()
         {
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
 
             Assert.ThrowsAsync<HttpResponseNotFoundException>(async () =>
                 await _client.GetTemplateVersionDetails(Guid.NewGuid(), _templateVersion1.TemplateVersionId));
@@ -53,10 +53,10 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
             var expectedDetails1 = ExpectedTemplateVersionDetails.From(_templateVersion1);
             var expectedDetails2 = ExpectedTemplateVersionDetails.From(_templateVersion2);
 
-            Authorize(Guid.NewGuid(), Tenant1Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant1Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             var receivedDetails1 = await _client.GetTemplateVersionDetails(_template1.TemplateId, _templateVersion1.TemplateVersionId);
 
-            Authorize(Guid.NewGuid(), Tenant2Id, new string[0], new[] { Permissions.ManageTemplates });
+            Authorize(Guid.NewGuid(), Tenant2Id, Array.Empty<string>(), new[] { Permissions.ManageTemplates });
             var receivedDetails2 = await _client.GetTemplateVersionDetails(_template2.TemplateId, _templateVersion2.TemplateVersionId);
 
             receivedDetails1.Should().BeEquivalentTo(expectedDetails1);
