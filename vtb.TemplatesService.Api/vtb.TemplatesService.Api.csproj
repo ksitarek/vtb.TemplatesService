@@ -15,7 +15,7 @@
     <PackageReference Include="vtb.Auth.Jwt" Version="1.0.8" />
     <PackageReference Include="vtb.Auth.Permissions" Version="1.0.8" />
     <PackageReference Include="vtb.Auth.Tenant" Version="1.0.8" />
-    <PackageReference Include="vtb.Utils" Version="1.0.31" />
+    <PackageReference Include="vtb.Utils" Version="1.0.32" />
   </ItemGroup>
 
   <ItemGroup>
