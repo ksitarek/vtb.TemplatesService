@@ -25,7 +25,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public async Task Will_Paginate_TemplateKinds()
         {
-            Authorize(Guid.NewGuid(), Guid.NewGuid(), new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Guid.NewGuid(), Array.Empty<string>(), Array.Empty<string>());
             await TestPagination((page, pageSize) => _client.GetTemplateKinds(page, pageSize),
                 new List<ExpectedTemplateKindListItem>()
                 {
@@ -41,7 +41,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
             var collection = db.GetCollection<TemplateKind>("TemplateKinds");
             await collection.DeleteManyAsync(Builders<TemplateKind>.Filter.Empty);
 
-            Authorize(Guid.NewGuid(), Guid.NewGuid(), new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Guid.NewGuid(), Array.Empty<string>(), Array.Empty<string>());
 
             var expectedEmptyPage =
                 new ExpectedListPage<ExpectedTemplateKindListItem>(0, new List<ExpectedTemplateKindListItem>() { });

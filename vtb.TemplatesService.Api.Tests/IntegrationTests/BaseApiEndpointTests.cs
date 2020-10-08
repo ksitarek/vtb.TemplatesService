@@ -41,13 +41,13 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         }
 
         [OneTimeSetUp]
-        public async Task SetUpHarness()
+        public void SetUpHarness()
         {
             _factory = new ApiFactory();
         }
 
         [SetUp]
-        public async Task SetUpHttpClient()
+        public void SetUpHttpClient()
         {
             _httpClient = _factory.CreateClient();
         }

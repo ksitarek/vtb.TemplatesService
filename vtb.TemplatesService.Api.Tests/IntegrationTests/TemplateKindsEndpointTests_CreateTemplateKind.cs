@@ -21,7 +21,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Require_SystemManage_Permission()
         {
-            Authorize(Guid.NewGuid(), Guid.NewGuid(), new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Guid.NewGuid(), Array.Empty<string>(), Array.Empty<string>());
 
             Assert.ThrowsAsync<HttpResponseForbiddenException>(async () =>
                 await _client.CreateTemplateKind(Guid.NewGuid().ToString()));
@@ -30,7 +30,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public async Task Will_Create_New_TemplateKind()
         {
-            Authorize(Guid.NewGuid(), Guid.NewGuid(), new string[0], new[] { Permissions.SystemManage });
+            Authorize(Guid.NewGuid(), Guid.NewGuid(), Array.Empty<string>(), new[] { Permissions.SystemManage });
 
             var expectedTemplateKind = new TemplateKind() { TemplateKindKey = Guid.NewGuid().ToString() };
             await _client.CreateTemplateKind(expectedTemplateKind.TemplateKindKey);
@@ -42,7 +42,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public void Will_Not_Create_TemplateKind_With_Taken_Key()
         {
-            Authorize(Guid.NewGuid(), Guid.NewGuid(), new string[0], new[] { Permissions.SystemManage });
+            Authorize(Guid.NewGuid(), Guid.NewGuid(), Array.Empty<string>(), new[] { Permissions.SystemManage });
 
             Assert.ThrowsAsync<HttpResponseConflictException>(async () =>
                 await _client.CreateTemplateKind(TemplateKinds.EmailTemplateKind.TemplateKindKey));

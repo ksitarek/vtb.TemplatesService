@@ -19,7 +19,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
         [Test]
         public async Task Will_Return_TemplateKind_By_Key()
         {
-            Authorize(Guid.NewGuid(), Guid.NewGuid(), new string[0], new string[0]);
+            Authorize(Guid.NewGuid(), Guid.NewGuid(), Array.Empty<string>(), Array.Empty<string>());
 
             var expectedTemplateKind = TemplateKinds.EmailTemplateKind;
             var receivedTemplateKind = await _client.GetTemplateKind(TemplateKinds.EmailTemplateKind.TemplateKindKey);
