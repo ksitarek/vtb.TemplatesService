@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace vtb.TemplatesService.Api
 {
@@ -15,6 +16,13 @@ namespace vtb.TemplatesService.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .UseSerilog((hostingContext, loggerConfig) =>
+                {
+                    loggerConfig
+                        .ReadFrom.Configuration(hostingContext.Configuration)
+                        .WriteTo.Console()
+                        .WriteTo.ApplicationInsights(TelemetryConverter.Events);
                 });
     }
 }
