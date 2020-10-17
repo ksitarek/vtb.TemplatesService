@@ -9,7 +9,6 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
 {
     public abstract class TemplateKindsControllerTests
     {
-        protected Mock<ILogger<TemplateKindsController>> _loggerMock;
         protected Mock<IMapper> _mapper;
         protected Mock<ITemplateKindManager> _templateKindManager;
         protected TemplateKindsController _controller;
@@ -17,7 +16,6 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _loggerMock = new Mock<ILogger<TemplateKindsController>>();
             _mapper = new Mock<IMapper>();
             _templateKindManager = new Mock<ITemplateKindManager>();
         }
@@ -26,7 +24,6 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
         public void SetUp()
         {
             _controller = new TemplateKindsController(
-                _loggerMock.Object,
                 _mapper.Object,
                 _templateKindManager.Object);
         }

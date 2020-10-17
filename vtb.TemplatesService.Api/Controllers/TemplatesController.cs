@@ -25,9 +25,8 @@ namespace vtb.TemplatesService.Api.Controllers
         private readonly ITemplateManager _templateManager;
 
         public TemplatesController(
-            ILogger<TemplatesController> logger,
             IMapper mapper,
-            ITemplateManager templateManager) : base(logger)
+            ITemplateManager templateManager) : base()
         {
             _mapper = mapper;
             _templateManager = templateManager;

@@ -25,9 +25,8 @@ namespace vtb.TemplatesService.Api.Controllers
         private readonly ITemplateKindManager _templateKindManager;
 
         public TemplateKindsController(
-            ILogger<TemplateKindsController> logger,
             IMapper mapper,
-            ITemplateKindManager templateKindManager) : base(logger)
+            ITemplateKindManager templateKindManager) : base()
         {
             _mapper = mapper;
             _templateKindManager = templateKindManager;
