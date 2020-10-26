@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using System.Linq;
 using System.Threading.Tasks;
 using vtb.Auth.Jwt;
 using vtb.Auth.Permissions;
@@ -102,6 +103,18 @@ namespace vtb.TemplatesService.Api
                     configure.AddPolicy(policy.Key, policy.Value);
             });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    var originsConfig = Configuration.GetSection("Cors:Origins");
+                    var origins = originsConfig.GetChildren().Select(x => x.Value).ToArray();
+                    builder.WithOrigins(origins);
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                });
+            });
+
             // API
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -129,6 +142,7 @@ namespace vtb.TemplatesService.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
