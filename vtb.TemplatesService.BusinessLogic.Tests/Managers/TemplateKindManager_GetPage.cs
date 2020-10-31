@@ -3,9 +3,11 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using vtb.TemplatesService.DataAccess;
+using vtb.TemplatesService.DataAccess.DTOs;
 using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
@@ -25,12 +27,29 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
                 new TemplateKind() { TemplateKindKey = "tk-2" },
             });
 
+            var templateKindsCounters = new List<KeyValuePair<string, long>>()
+            {
+                new KeyValuePair<string, long>("tk-1", 0),
+                new KeyValuePair<string, long>("tk-2", 10),
+            };
+
+            var expectedPage = new Page<TemplateKindWithCount>(2, new List<TemplateKindWithCount>()
+            {
+                new TemplateKindWithCount("tk-1", 0),
+                new TemplateKindWithCount("tk-2", 10)
+            });
+
             _templateKindsRepositoryMock.Setup(x => x.GetTemplateKindsPage(page, pageSize, ct))
                 .ReturnsAsync(templateKindsPage)
                 .Verifiable();
 
+            var templateKindKeys = templateKindsPage.Entities.Select(x => x.TemplateKindKey);
+            _templatesRepositoryMock.Setup(x => x.CountTemplatesByTemplateKindKeys(templateKindKeys, ct))
+                .ReturnsAsync(templateKindsCounters)
+                .Verifiable();
+
             var result = await _manager.GetPage(page, pageSize, ct);
-            result.Should().BeEquivalentTo(templateKindsPage);
+            result.Should().BeEquivalentTo(expectedPage);
 
             _templateKindsRepositoryMock.Verify();
         }

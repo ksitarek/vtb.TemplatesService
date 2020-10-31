@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +39,24 @@ namespace vtb.TemplatesService.DataAccess.Repositories
             var filter = filterBuilder.Eq(x => x.TemplateKindKey, templateKindKey);
 
             return _collection.CountDocumentsAsync(filter, null, cancellationToken);
+        }
+
+        public async Task<List<KeyValuePair<string, long>>> CountTemplatesByTemplateKindKeys(IEnumerable<string> templateKindsKeys, CancellationToken cancellationToken)
+        {
+            var result = await _collection.Aggregate()
+                .Match(x => templateKindsKeys.Contains(x.TemplateKindKey))
+                .Group(x => x.TemplateKindKey, g => new { Key = g.Key, Value = g.LongCount()})
+                .ToListAsync(cancellationToken);
+
+            return templateKindsKeys.Select(x 
+                => new KeyValuePair<string, long>(
+                    x, 
+                    result
+                        .Where(z => z.Key == x)
+                        .Select(z => z.Value)
+                        .DefaultIfEmpty(0)
+                        .FirstOrDefault()))
+                .ToList();
         }
 
         public Task<Template> GetDefaultTemplate(string templateKindKey, CancellationToken cancellationToken = default)
@@ -247,5 +266,6 @@ namespace vtb.TemplatesService.DataAccess.Repositories
         }
 
         private FilterDefinition<Template> TenantFilter() => _filterBuilder.Eq(x => x.TenantId, _tenantIdProvider.TenantId);
+
     }
 }
