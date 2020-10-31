@@ -1,7 +1,10 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using vtb.TemplatesService.BusinessLogic.Exceptions;
 using vtb.TemplatesService.DataAccess;
+using vtb.TemplatesService.DataAccess.DTOs;
 using vtb.TemplatesService.DataAccess.Repositories;
 using vtb.TemplatesService.DomainModel;
 using vtb.Utils;
@@ -47,13 +50,27 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             return await _templateKindsRepository.GetTemplateKind(templateKindKey, cancellationToken) != null;
         }
 
-        public Task<Page<TemplateKind>> GetPage(int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<Page<TemplateKindWithCount>> GetPage(int page, int pageSize, CancellationToken cancellationToken)
         {
             Check.GreaterThan(page, 0, nameof(page));
             Check.GreaterThan(pageSize, 0, nameof(pageSize));
 
-            return _templateKindsRepository.GetTemplateKindsPage(page, pageSize, cancellationToken);
+            var templateKinds = await _templateKindsRepository.GetTemplateKindsPage(page, pageSize, cancellationToken);
+            var templateKindsKeys = templateKinds.Entities.Select(x => x.TemplateKindKey);
+
+            var counters = await _templatesRepository.CountTemplatesByTemplateKindKeys(templateKindsKeys, cancellationToken);
+
+            return new Page<TemplateKindWithCount>(
+                templateKinds.TotalCount,
+                templateKinds.Entities.Select(x => new TemplateKindWithCount(x.TemplateKindKey, GetCountForKind(x, counters))).ToList());
         }
+
+        private long GetCountForKind(TemplateKind kind, List<KeyValuePair<string, long>> counters)
+            => counters
+                .Where(x => x.Key == kind.TemplateKindKey)
+                .Select(x => x.Value)
+                .DefaultIfEmpty(0)
+                .FirstOrDefault();
 
         public async Task Remove(string templateKindKey, CancellationToken cancellationToken)
         {

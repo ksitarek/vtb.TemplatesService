@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using vtb.TemplatesService.DataAccess;
+using vtb.TemplatesService.DataAccess.DTOs;
 using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.BusinessLogic.Managers
@@ -11,7 +12,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
 
         Task Remove(string templateKindKey, CancellationToken cancellationToken);
 
-        Task<Page<TemplateKind>> GetPage(int page, int pageSize, CancellationToken cancellationToken);
+        Task<Page<TemplateKindWithCount>> GetPage(int page, int pageSize, CancellationToken cancellationToken);
 
         Task<TemplateKind> Get(string templateKindKey, CancellationToken cancellationToken);
 

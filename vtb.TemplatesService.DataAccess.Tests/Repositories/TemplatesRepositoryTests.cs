@@ -45,6 +45,7 @@ namespace vtb.TemplatesService.DataAccess.Tests.Repositories
             new Template() { TemplateId = Guid.NewGuid(), TemplateKindKey = "tk1", Label = "Tenant 2 Template Kind 1 Template 1", TenantId = new Guid("cc6f58cc-8446-4886-83d6-4917278d3082"), IsDefault = true},
             new Template() { TemplateId = Guid.NewGuid(), TemplateKindKey = "tk1", Label = "Tenant 2 Template Kind 1 Template 2", TenantId = new Guid("cc6f58cc-8446-4886-83d6-4917278d3082") },
             new Template() { TemplateId = Guid.NewGuid(), TemplateKindKey = "tk2", Label = "Tenant 2 Template Kind 2 Template 1", TenantId = new Guid("cc6f58cc-8446-4886-83d6-4917278d3082") },
+            new Template() { TemplateId = Guid.NewGuid(), TemplateKindKey = "tk3", Label = "Tenant 2 Template Kind 2 Template 1", TenantId = new Guid("2C01E7D6-7762-4A0E-82C0-EC13272833DC") },
         }.AsReadOnly();
 
         [SetUp]
@@ -463,6 +464,18 @@ namespace vtb.TemplatesService.DataAccess.Tests.Repositories
 
             var result = await _repository.TemplateLabelTaken(label, ct);
             result.Should().BeFalse();
+        }
+
+        [Test]
+        public async Task Will_Return_Use_Count_For_Each_Of_TemplateKinds() {
+            var kinds = new[] { "tk1", "tk3", "tk4" };
+            var ct = CancellationToken.None;
+
+            var result = await _repository.CountTemplatesByTemplateKindKeys(kinds, ct);
+            result.Count.Should().Be(3);
+            result.FirstOrDefault(x => x.Key == "tk1").Value.Should().Be(4);
+            result.FirstOrDefault(x => x.Key == "tk3").Value.Should().Be(1);
+            result.FirstOrDefault(x => x.Key == "tk4").Value.Should().Be(0);
         }
 
         private T Clone<T>(T obj) => JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj));

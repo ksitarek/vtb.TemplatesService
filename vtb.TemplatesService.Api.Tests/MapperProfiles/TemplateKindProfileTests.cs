@@ -3,6 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using vtb.TemplatesService.Api.MapperProfiles;
 using vtb.TemplatesService.Api.Responses;
+using vtb.TemplatesService.DataAccess.DTOs;
 using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.Api.Tests.MapperProfiles
@@ -23,10 +24,10 @@ namespace vtb.TemplatesService.Api.Tests.MapperProfiles
         }
 
         [Test]
-        public void Maps_TemplateKind_To_TemplateKindListItem()
+        public void Maps_TemplateKindWithCount_To_TemplateKindListItem()
         {
-            var input = new TemplateKind() { TemplateKindKey = "tk-1" };
-            var expectedOutput = new TemplateKindListItem() { TemplateKindKey = "tk-1" };
+            var input = new TemplateKindWithCount("tk-1", int.MaxValue);
+            var expectedOutput = new TemplateKindListItem() { TemplateKindKey = "tk-1", Uses = int.MaxValue };
 
             var actualOutput = _mapper.Map<TemplateKindListItem>(input);
             actualOutput.Should().BeEquivalentTo(expectedOutput);

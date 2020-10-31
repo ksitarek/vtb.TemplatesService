@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using vtb.TemplatesService.Api.Responses;
 using vtb.TemplatesService.DataAccess;
+using vtb.TemplatesService.DataAccess.DTOs;
 using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.Api.Tests.Controllers
@@ -18,19 +19,19 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
         [Test]
         public async Task Produces_200OK()
         {
-            var pageFromManager = new Page<TemplateKind>(2, new List<TemplateKind>
+            var pageFromManager = new Page<TemplateKindWithCount>(2, new List<TemplateKindWithCount>
             {
-                    new TemplateKind {  TemplateKindKey = "tk1" },
-                    new TemplateKind {  TemplateKindKey = "tk2" },
-                }.AsReadOnly());
+                new TemplateKindWithCount("tk1", 1),
+                new TemplateKindWithCount("tk2", 4),
+            }.AsReadOnly());
 
             _templateKindManager.Setup(x => x.GetPage(1, 2, CancellationToken.None))
                 .ReturnsAsync(pageFromManager);
 
             var listFromMapper = new List<TemplateKindListItem>
             {
-                    new TemplateKindListItem {  TemplateKindKey = "tk1" },
-                    new TemplateKindListItem {  TemplateKindKey = "tk2" },
+                    new TemplateKindListItem {  TemplateKindKey = "tk1", Uses = 1 },
+                    new TemplateKindListItem {  TemplateKindKey = "tk2", Uses = 4 },
                 };
 
             _mapper.Setup(x => x.Map<List<TemplateKindListItem>>(pageFromManager.Entities))
@@ -43,7 +44,7 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
             result.StatusCode.Should().Be(StatusCodes.Status200OK);
 
             _templateKindManager.Verify(x => x.GetPage(1, 2, CancellationToken.None), Times.Once);
-            _mapper.Verify(x => x.Map<List<TemplateKindListItem>>(It.IsAny<IReadOnlyList<TemplateKind>>()), Times.Once);
+            _mapper.Verify(x => x.Map<List<TemplateKindListItem>>(It.IsAny<IReadOnlyList<TemplateKindWithCount>>()), Times.Once);
         }
 
         [Test]
