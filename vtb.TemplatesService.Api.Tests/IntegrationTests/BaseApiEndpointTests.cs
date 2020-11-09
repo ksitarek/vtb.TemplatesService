@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using vtb.Auth.Jwt;
+using vtb.TemplatesService.Api.Responses;
 using vtb.TemplatesService.Api.Tests.IntegrationTests.ExpectedResults;
 
 namespace vtb.TemplatesService.Api.Tests.IntegrationTests
@@ -80,18 +81,18 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
             _httpClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {token.Token}");
         }
 
-        internal async Task TestPagination<TListItem>(Func<int, int, ValueTask<ExpectedListPage<TListItem>>> func, List<TListItem> allRecords)
+        internal async Task TestPagination<TListItem, TExpectedListItem>(Func<int, int, ValueTask<ListPage<TListItem>>> func, List<TExpectedListItem> allRecords)
         {
             var totalCount = allRecords.Count;
             var pageSize = (int)Math.Ceiling(totalCount / 2M);
 
             var expectedResults = new[]
             {
-                new ExpectedListPage<TListItem>(2, allRecords.Take(pageSize).ToList()),
-                new ExpectedListPage<TListItem>(2, allRecords.Skip(pageSize).Take(pageSize).ToList()),
-                new ExpectedListPage<TListItem>(2, allRecords),
-                new ExpectedListPage<TListItem>(2, allRecords),
-                new ExpectedListPage<TListItem>(2, new List<TListItem>() { })
+                new ExpectedListPage<TExpectedListItem>(2, allRecords.Take(pageSize).ToList()),
+                new ExpectedListPage<TExpectedListItem>(2, allRecords.Skip(pageSize).Take(pageSize).ToList()),
+                new ExpectedListPage<TExpectedListItem>(2, allRecords),
+                new ExpectedListPage<TExpectedListItem>(2, allRecords),
+                new ExpectedListPage<TExpectedListItem>(2, new List<TExpectedListItem>() { })
             };
 
             var tasks = new[]

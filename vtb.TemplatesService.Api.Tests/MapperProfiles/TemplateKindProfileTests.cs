@@ -4,7 +4,6 @@ using NUnit.Framework;
 using vtb.TemplatesService.Api.MapperProfiles;
 using vtb.TemplatesService.Api.Responses;
 using vtb.TemplatesService.DataAccess.DTOs;
-using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.Api.Tests.MapperProfiles
 {
