@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using vtb.TemplatesService.Api.Responses;
 using vtb.TemplatesService.Api.Tests.IntegrationTests.ExpectedResults;
+using vtb.TemplatesService.DomainModel;
 using vtb.Testing.Rest;
 
 namespace vtb.TemplatesService.Api.Tests.IntegrationTests.Clients
@@ -16,11 +18,11 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests.Clients
             _restClient = new RestClient(httpClient);
         }
 
-        internal ValueTask<ExpectedListPage<ExpectedTemplateKindListItem>> GetTemplateKinds(int page = 1, int pageSize = 10)
-            => _restClient.GetContentAsync<ExpectedListPage<ExpectedTemplateKindListItem>>($"{Endpoint}?page={page}&pageSize={pageSize}");
+        internal ValueTask<ListPage<TemplateKindListItem>> GetTemplateKinds(int page = 1, int pageSize = 10)
+            => _restClient.GetContentAsync<ListPage<TemplateKindListItem>>($"{Endpoint}?page={page}&pageSize={pageSize}");
 
-        internal ValueTask<ExpectedTemplateKind> GetTemplateKind(string templateKindKey)
-            => _restClient.GetContentAsync<ExpectedTemplateKind>($"{Endpoint}/{templateKindKey}");
+        internal ValueTask<TemplateKind> GetTemplateKind(string templateKindKey)
+            => _restClient.GetContentAsync<TemplateKind>($"{Endpoint}/{templateKindKey}");
 
         internal ValueTask<Uri> CreateTemplateKind(string templateKindKey)
             => _restClient.PutAsync($"{Endpoint}/{templateKindKey}");

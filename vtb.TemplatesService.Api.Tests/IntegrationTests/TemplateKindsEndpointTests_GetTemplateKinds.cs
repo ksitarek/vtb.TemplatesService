@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using vtb.TemplatesService.Api.Responses;
 using vtb.TemplatesService.Api.Tests.IntegrationTests.ExpectedResults;
 using vtb.TemplatesService.DataAccess.Seed;
 using vtb.TemplatesService.DomainModel;
