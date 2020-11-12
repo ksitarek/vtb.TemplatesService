@@ -11,8 +11,8 @@ RUN apt-get install -y \
     gnupg-agent \
     software-properties-common
 
-# Install Dotnet Core 3.1
-RUN wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+# Install Dotnet Core 5.0
+RUN wget -N https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 RUN dpkg -i packages-microsoft-prod.deb
 RUN add-apt-repository universe
 RUN apt-get update
