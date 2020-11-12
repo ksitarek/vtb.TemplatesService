@@ -14,7 +14,6 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
 {
     public class TemplateKindsControllerTests_Exists
     {
-        private Mock<ILogger<TemplateKindsController>> _loggerMock;
         private Mock<IMapper> _mapper;
         private Mock<ITemplateKindManager> _templateKindManager;
         private TemplateKindsController _controller;
