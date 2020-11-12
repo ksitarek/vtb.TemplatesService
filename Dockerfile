@@ -18,7 +18,7 @@ RUN add-apt-repository universe
 RUN apt-get update
 RUN apt-get install apt-transport-https -y
 RUN apt-get update
-RUN apt-get install dotnet-sdk-3.1 -y
+RUN apt-get install dotnet-sdk-5.0 -y
 ENV PATH=$PATH:/root/.dotnet/tools
 RUN dotnet tool install --global dotnet-sonarscanner
 
