@@ -121,7 +121,7 @@ namespace vtb.TemplatesService.Api.Controllers
         {
             return SafeInvoke(async () =>
             {
-                await _templateManager.UpdateTemplateVersion(request.TemplateId, request.TemplateVersionId, request.Body.Content, request.Body.IsActive, cancellationToken);
+                await _templateManager.UpdateTemplateVersion(request.TemplateId, request.TemplateVersionId, request.Body.Content, cancellationToken);
                 return AcceptedAtRoute("TemplateVersionDetails", new { request.TemplateId, request.TemplateVersionId }, null);
             });
         }
@@ -170,7 +170,7 @@ namespace vtb.TemplatesService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [RequirePermission(Permissions.ManageTemplates)]
-        public Task<IActionResult> SetDefaultTemplate([FromRoute]string templateKindKey, [FromBody]Guid templateId, CancellationToken cancellationToken)
+        public Task<IActionResult> SetDefaultTemplate([FromRoute] string templateKindKey, [FromBody] Guid templateId, CancellationToken cancellationToken)
         {
             return SafeInvoke(async () =>
             {
@@ -180,6 +180,24 @@ namespace vtb.TemplatesService.Api.Controllers
             {
                 { typeof(TemplateNotFoundException), BadRequest },
                 { typeof(TemplateKindNotFoundException), BadRequest }
+            });
+        }
+
+        [HttpPost("{templateId}/currentVersion")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [RequirePermission(Permissions.ManageTemplates)]
+        public Task<IActionResult> SetCurrentVersion([FromRoute] Guid templateId, [FromBody] Guid templateVersionId, CancellationToken cancellationToken)
+        {
+            return SafeInvoke(async () =>
+            {
+                await _templateManager.SetCurrentVersion(templateId, templateVersionId, cancellationToken);
+                return AcceptedAtRoute("TemplateDetails", new { templateId }, null);
+            }, new Dictionary<Type, Func<IActionResult>>()
+            {
+                { typeof(TemplateNotFoundException), NotFound },
+                { typeof(TemplateVersionNotFoundException), BadRequest }
             });
         }
 

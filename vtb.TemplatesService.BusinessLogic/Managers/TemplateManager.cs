@@ -214,6 +214,31 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             }
         }
 
+        public async Task SetCurrentVersion(Guid templateId, Guid templateVersionId, CancellationToken cancellationToken)
+        {
+            Check.GuidNotEmpty(templateId, nameof(templateId));
+            Check.GuidNotEmpty(templateVersionId, nameof(templateVersionId));
+
+            if (!await _templatesRepository.TemplateExists(templateId, cancellationToken))
+            {
+                throw new TemplateNotFoundException(templateId);
+            }
+
+            if(!await _templatesRepository.TemplateVersionExists(templateId, templateVersionId, cancellationToken))
+            {
+                throw new TemplateVersionNotFoundException(templateId, templateVersionId);
+            }
+
+            try
+            {
+                await _templatesRepository.SetCurrentVersion(templateId, templateVersionId, cancellationToken);
+            }
+            catch(Exception e)
+            {
+                throw new SetCurrentTemplateVersionFailedException(templateId, templateVersionId, e);
+            }
+        }
+
         public async Task SetDefaultTemplate(string templateKindKey, Guid templateId, CancellationToken cancellationToken)
         {
             Check.NotEmpty(templateKindKey, nameof(templateKindKey));
@@ -239,7 +264,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             }
         }
 
-        public async Task UpdateTemplateVersion(Guid templateId, Guid templateVersionId, string content, bool isActive, CancellationToken cancellationToken)
+        public async Task UpdateTemplateVersion(Guid templateId, Guid templateVersionId, string content, CancellationToken cancellationToken)
         {
             Check.GuidNotEmpty(templateId, nameof(templateId));
             Check.GuidNotEmpty(templateVersionId, nameof(templateVersionId));
@@ -257,7 +282,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
 
             try
             {
-                var templateVersionToUpdate = new TemplateVersion() { TemplateVersionId = templateVersionId, Content = content, IsActive = isActive };
+                var templateVersionToUpdate = new TemplateVersion() { TemplateVersionId = templateVersionId, Content = content };
                 await _templatesRepository.UpdateTemplateVersion(templateId, templateVersionToUpdate, cancellationToken);
             }
             catch (Exception e)
