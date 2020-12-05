@@ -16,6 +16,7 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "Lorem Ipsum";
+            var ct = CancellationToken.None;
             
 
             _templatesRepositoryMock.Setup(x => x.TemplateExists(templateId, ct)).ReturnsAsync(true);
