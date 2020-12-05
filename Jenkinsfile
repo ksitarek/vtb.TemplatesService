@@ -32,6 +32,7 @@ pipeline {
                         /d:sonar.login="${SONARQUBE_TOKEN}" \
                         /d:sonar.host.url="${SONARQUBE_URL}" \
                         /d:sonar.coverage.exclusions="*.Tests/" \
+                        /d:sonar.branch.name="${BRANCH_NAME}" \
                         /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
                     '''
             }
