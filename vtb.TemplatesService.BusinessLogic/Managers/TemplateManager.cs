@@ -35,7 +35,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             Check.NotEmpty(label, nameof(label));
             Check.NotEmpty(content, nameof(content));
 
-            if (await _templatesRepository.TemplateLabelTaken(label))
+            if (await _templatesRepository.TemplateLabelTaken(label, cancellationToken))
             {
                 throw new TemplateLabelAlreadyTakenException(label);
             }
@@ -168,7 +168,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
         {
             Check.GuidNotEmpty(templateId, nameof(templateId));
 
-            if (!await _templatesRepository.TemplateExists(templateId))
+            if (!await _templatesRepository.TemplateExists(templateId, cancellationToken))
             {
                 throw new TemplateNotFoundException(templateId);
             }
@@ -270,7 +270,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             Check.GuidNotEmpty(templateVersionId, nameof(templateVersionId));
             Check.NotEmpty(content, nameof(content));
 
-            if (!await _templatesRepository.TemplateExists(templateId))
+            if (!await _templatesRepository.TemplateExists(templateId, cancellationToken))
             {
                 throw new TemplateNotFoundException(templateId);
             }

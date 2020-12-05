@@ -18,7 +18,6 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "lorem ipsum";
-            var isActive = true;
             var ct = CancellationToken.None;
 
             _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, ct))
@@ -49,7 +48,6 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "lorem ipsum";
-            var isActive = true;
             var ct = CancellationToken.None;
 
             _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, ct))
