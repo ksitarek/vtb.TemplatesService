@@ -6,8 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="MassTransit" Version="7.0.6" />
-    <PackageReference Include="MongoDB.Driver" Version="2.11.4" />
-    <PackageReference Include="vtb.Auth.Tenant" Version="1.0.10" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.5" />
+    <PackageReference Include="vtb.Auth.Tenant" Version="1.0.11" />
     <PackageReference Include="vtb.Utils" Version="1.0.35" />
   </ItemGroup>
 

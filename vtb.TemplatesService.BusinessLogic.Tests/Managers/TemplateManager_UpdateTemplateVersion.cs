@@ -16,14 +16,8 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "Lorem Ipsum";
-            
             var ct = CancellationToken.None;
-
-            var expectedTemplateVersion = new TemplateVersion()
-            {
-                TemplateVersionId = templateVersionId,
-                Content = content
-            };
+            
 
             _templatesRepositoryMock.Setup(x => x.TemplateExists(templateId, ct)).ReturnsAsync(true);
             _templatesRepositoryMock.Setup(x => x.TemplateVersionExists(templateId, templateVersionId, ct)).ReturnsAsync(true);
@@ -35,7 +29,8 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
             _templatesRepositoryMock.Verify(x => x.UpdateTemplateVersion(templateId,
                 It.Is<TemplateVersion>(tv =>
                     tv.TemplateVersionId == templateVersionId &&
-                    tv.Content == content
+                    tv.Content == content &&
+                    tv.UpdatedAt == _utcNow
                 ), ct));
         }
 

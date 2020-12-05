@@ -24,6 +24,7 @@ namespace vtb.TemplatesService.DataAccess.Seed
                     Content = "Lorem ipsum, dolor sit amet",
                     Version = 1,
                     CreatedAt = new DateTimeOffset(2020, 09, 21, 6, 47, 23, 0, TimeSpan.FromHours(1)),
+                    UpdatedAt = new DateTimeOffset(2020, 09, 21, 6, 47, 23, 0, TimeSpan.FromHours(1)),
                     IsActive = true
                 },
                 new TemplateVersion()
@@ -32,6 +33,7 @@ namespace vtb.TemplatesService.DataAccess.Seed
                     Content = "Lorem ipsum, dolor sit amet, consecteur...",
                     Version = 2,
                     CreatedAt = new DateTimeOffset(2020, 09, 21, 6, 49, 32, 0, TimeSpan.FromHours(1)),
+                    UpdatedAt = new DateTimeOffset(2020, 09, 21, 6, 49, 32, 0, TimeSpan.FromHours(1)),
                     IsActive = false
                 }
             }
@@ -52,6 +54,7 @@ namespace vtb.TemplatesService.DataAccess.Seed
                     Content = "Fusce sed nunc vitae elit vehicula convallis a eu turpis.",
                     Version = 1,
                     CreatedAt = new DateTimeOffset(2020, 09, 21, 6, 47, 23, 0, TimeSpan.FromHours(1)),
+                    UpdatedAt = new DateTimeOffset(2020, 09, 21, 6, 47, 23, 0, TimeSpan.FromHours(1)),
                     IsActive = false
                 },
                 new TemplateVersion()
@@ -59,7 +62,7 @@ namespace vtb.TemplatesService.DataAccess.Seed
                     TemplateVersionId = Guid.Parse("926d0fc7-bb35-41db-97e1-ff685ec35737"),
                     Content = "Praesent laoreet non risus vel vestibulum. Integer dignissim metus est, sit amet placerat dolor congue ac. Sed lacinia turpis augue, at semper elit hendrerit id. Suspendisse potenti. Ut tortor ipsum, tincidunt vel lectus vel, pellentesque congue dui. Cras mattis, ex vitae posuere pellentesque, ex nulla gravida sem, ac iaculis sem diam eu elit. Fusce a urna varius leo commodo auctor. Sed dapibus facilisis aliquet. Aenean mollis magna et sodales ultrices.",
                     Version = 2,
-                    CreatedAt = new DateTimeOffset(2020, 09, 21, 6, 49, 32, 0, TimeSpan.FromHours(1)),
+                    UpdatedAt = new DateTimeOffset(2020, 09, 21, 6, 49, 32, 0, TimeSpan.FromHours(1)),
                     IsActive = true
                 }
             }
