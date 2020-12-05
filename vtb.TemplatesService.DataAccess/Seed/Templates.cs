@@ -68,35 +68,6 @@ namespace vtb.TemplatesService.DataAccess.Seed
             }
         };
 
-        public static readonly Template Tenant1InvoiceTemplateWithoutActiveVersion = new Template()
-        {
-            TemplateId = Guid.Parse("0f6d4d20-dcdd-4909-9318-da2ea754f91e"),
-            TenantId = Tenant1Id,
-            Label = "Tenant 1 / Secondary Invoice Template",
-            IsDefault = true,
-            TemplateKindKey = "invoices",
-            Versions = new List<TemplateVersion>()
-            {
-                new TemplateVersion()
-                {
-                    TemplateVersionId = Guid.Parse("08ea44df-77ca-4581-a85f-3f506eadcf15"),
-                    Content = "Fusce sed nunc vitae elit vehicula convallis a eu turpis.",
-                    Version = 1,
-                    CreatedAt = new DateTimeOffset(2020, 09, 21, 6, 47, 23, 0, TimeSpan.FromHours(1)),
-                    UpdatedAt = new DateTimeOffset(2020, 09, 21, 6, 47, 23, 0, TimeSpan.FromHours(1)),
-                    IsActive = false
-                },
-                new TemplateVersion()
-                {
-                    TemplateVersionId = Guid.Parse("926d0fc7-bb35-41db-97e1-ff685ec35737"),
-                    Content = "Praesent laoreet non risus vel vestibulum. Integer dignissim metus est, sit amet placerat dolor congue ac. Sed lacinia turpis augue, at semper elit hendrerit id. Suspendisse potenti. Ut tortor ipsum, tincidunt vel lectus vel, pellentesque congue dui. Cras mattis, ex vitae posuere pellentesque, ex nulla gravida sem, ac iaculis sem diam eu elit. Fusce a urna varius leo commodo auctor. Sed dapibus facilisis aliquet. Aenean mollis magna et sodales ultrices.",
-                    Version = 2,
-                    UpdatedAt = new DateTimeOffset(2020, 09, 21, 6, 49, 32, 0, TimeSpan.FromHours(1)),
-                    IsActive = false
-                }
-            }
-        };
-
         public static readonly Template Tenant2FirstInvoiceTemplate = new Template()
         {
             TemplateId = Guid.Parse("e4807fbe-b132-4ffe-a87d-23c78ac337ec"),

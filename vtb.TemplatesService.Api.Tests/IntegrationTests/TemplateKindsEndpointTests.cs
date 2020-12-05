@@ -6,6 +6,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
     public class TemplateKindsEndpointTests : BaseApiEndpointTests
     {
         internal TemplateKindsTestsClient _client;
+
         [SetUp]
         public void SetUp()
         {

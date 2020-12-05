@@ -238,7 +238,6 @@ namespace vtb.TemplatesService.DataAccess.Repositories
 
             var update = _updateBuilder
                 .Set($"{nameof(Template.Versions)}.$.{nameof(TemplateVersion.Content)}", templateVersion.Content)
-                .Set($"{nameof(Template.Versions)}.$.{nameof(TemplateVersion.IsActive)}", templateVersion.IsActive)
                 .Set($"{nameof(Template.Versions)}.$.{nameof(TemplateVersion.UpdatedAt)}", templateVersion.UpdatedAt);
 
             return _collection.UpdateOneAsync(filter, update, null, cancellationToken);
