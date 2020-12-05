@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -184,6 +183,24 @@ namespace vtb.TemplatesService.Api.Controllers
             {
                 { typeof(TemplateNotFoundException), BadRequest },
                 { typeof(TemplateKindNotFoundException), BadRequest }
+            });
+        }
+
+        [HttpPost("{templateId}/currentVersion")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [RequirePermission(Permissions.ManageTemplates)]
+        public Task<IActionResult> SetCurrentVersion([FromRoute] Guid templateId, [FromBody] Guid templateVersionId, CancellationToken cancellationToken)
+        {
+            return SafeInvoke(async () =>
+            {
+                await _templateManager.SetCurrentVersion(templateId, templateVersionId, cancellationToken);
+                return AcceptedAtRoute("TemplateDetails", new { templateId }, null);
+            }, new Dictionary<Type, Func<IActionResult>>()
+            {
+                { typeof(TemplateNotFoundException), NotFound },
+                { typeof(TemplateVersionNotFoundException), BadRequest }
             });
         }
 

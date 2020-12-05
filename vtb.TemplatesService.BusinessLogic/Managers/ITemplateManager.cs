@@ -29,5 +29,6 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
         Task<Template> GetDefaultTemplate(string templateKindKey, CancellationToken cancellationToken);
 
         Task SetDefaultTemplate(string templateKindKey, Guid templateId, CancellationToken cancellationToken);
+        Task SetCurrentVersion(Guid templateId, Guid templateVersionId, CancellationToken cancellationToken);
     }
 }

@@ -18,16 +18,14 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "lorem ipsum";
-            var isActive = true;
             var ct = CancellationToken.None;
 
-            _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, isActive, ct))
+            _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, ct))
                 .Verifiable();
 
             var request = new UpdateTemplateVersion()
             {
-                Content = content,
-                IsActive = isActive
+                Content = content
             };
 
             var result = await _controller.UpdateTemplateVersion(templateId, templateVersionId, request, ct) as AcceptedAtRouteResult;
@@ -45,16 +43,14 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "lorem ipsum";
-            var isActive = true;
             var ct = CancellationToken.None;
 
-            _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, isActive, ct))
+            _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, ct))
                 .ThrowsAsync(new ArgumentException());
 
             var request = new UpdateTemplateVersion()
             {
-                Content = content,
-                IsActive = isActive
+                Content = content
             };
             var result = await _controller.UpdateTemplateVersion(templateId, templateVersionId, request, ct);
             result.Should().BeOfType(typeof(BadRequestResult));
@@ -66,16 +62,14 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "lorem ipsum";
-            var isActive = true;
             var ct = CancellationToken.None;
 
-            _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, isActive, ct))
+            _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, ct))
                 .ThrowsAsync(new TemplateNotFoundException(templateId));
 
             var request = new UpdateTemplateVersion()
             {
-                Content = content,
-                IsActive = isActive
+                Content = content
             };
             var result = await _controller.UpdateTemplateVersion(templateId, templateVersionId, request, ct);
             result.Should().BeOfType(typeof(NotFoundResult));
@@ -87,16 +81,14 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "lorem ipsum";
-            var isActive = true;
             var ct = CancellationToken.None;
 
-            _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, isActive, ct))
+            _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, ct))
                 .ThrowsAsync(new TemplateVersionNotFoundException(templateId, templateVersionId));
 
             var request = new UpdateTemplateVersion
             {
-                Content = content,
-                IsActive = isActive
+                Content = content
             };
             var result = await _controller.UpdateTemplateVersion(templateId, templateVersionId, request, ct);
             result.Should().BeOfType(typeof(NotFoundResult));

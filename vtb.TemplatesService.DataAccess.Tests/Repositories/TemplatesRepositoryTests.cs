@@ -48,16 +48,20 @@ namespace vtb.TemplatesService.DataAccess.Tests.Repositories
             new Template() { TemplateId = Guid.NewGuid(), TemplateKindKey = "tk3", Label = "Tenant 2 Template Kind 2 Template 1", TenantId = new Guid("2C01E7D6-7762-4A0E-82C0-EC13272833DC") },
         }.AsReadOnly();
 
+
         [SetUp]
         public void SetUp()
         {
             _collection = _database.GetCollection<Template>("Templates");
-            _collection.InsertMany(_templates);
+            _collection.InsertMany(DeepClone(_templates));
 
             _tenantIdProvider = new Mock<ITenantIdProvider>();
 
             _repository = new TemplatesRepository(_database, _tenantIdProvider.Object);
         }
+
+        private TObj DeepClone<TObj>(TObj obj)
+            => JsonConvert.DeserializeObject<TObj>(JsonConvert.SerializeObject(obj));
 
         [TearDown]
         public void TearDown()
@@ -89,7 +93,7 @@ namespace vtb.TemplatesService.DataAccess.Tests.Repositories
         [Test]
         public async Task Will_Return_Template_With_Active_Version_Only_By_TemplateId()
         {
-            var expectedTemplate = _templates[0];
+            var expectedTemplate = DeepClone(_templates[0]);
             expectedTemplate.Versions = expectedTemplate.Versions.Where(x => x.IsActive).ToList();
 
             _tenantIdProvider.Setup(x => x.TenantId).Returns(Tenant1Id).Verifiable();
@@ -288,6 +292,24 @@ namespace vtb.TemplatesService.DataAccess.Tests.Repositories
             _collection.AsQueryable()
                 .Count(x => x.TenantId == Tenant1Id && x.IsDefault)
                 .Should().Be(1);
+
+            _tenantIdProvider.Verify();
+        }
+
+        [Test]
+        public async Task Will_Set_CurrentVersion_For_template()
+        {
+            var templateId = _templates[0].TemplateId;
+            var templateVersionId = _templates[0].Versions[1].TemplateVersionId;
+
+            _tenantIdProvider.Setup(x => x.TenantId).Returns(Tenant1Id).Verifiable();
+
+            await _repository.SetCurrentVersion(templateId, templateVersionId, CancellationToken.None);
+
+            var template = await _collection.Find(Builders<Template>.Filter.Eq(x => x.TemplateId, templateId)).FirstOrDefaultAsync();
+            template.ActiveVersion.TemplateVersionId.Should().Be(templateVersionId);
+            template.Versions.Where(x => x.IsActive).Select(x => x.TemplateVersionId).First().Should().Be(templateVersionId);
+            template.Versions.Count(x => x.IsActive).Should().Be(1);
 
             _tenantIdProvider.Verify();
         }
