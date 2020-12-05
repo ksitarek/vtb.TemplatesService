@@ -103,8 +103,7 @@ namespace vtb.TemplatesService.DataAccess.Repositories
             long count = 0;
             if (countOutput.Any())
             {
-                count = countOutput.First()
-                    .Count;
+                count = countOutput[0].Count;
             }
 
             return new Page<Template>(count, data);
