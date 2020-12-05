@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using vtb.TemplatesService.Api.Responses;
-using vtb.TemplatesService.Api.Tests.IntegrationTests.ExpectedResults;
 using vtb.TemplatesService.DomainModel;
 using vtb.Testing.Rest;
 

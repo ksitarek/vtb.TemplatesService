@@ -20,7 +20,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
 
         Task<Page<TemplateVersion>> GetTemplateVersionsPage(Guid templateId, int page, int pageSize, CancellationToken cancellationToken);
 
-        Task UpdateTemplateVersion(Guid templateId, Guid templateVersionId, string content, bool isActive, CancellationToken cancellationToken);
+        Task UpdateTemplateVersion(Guid templateId, Guid templateVersionId, string content, CancellationToken cancellationToken);
 
         Task RemoveTemplate(Guid templateId, CancellationToken cancellationToken);
 
@@ -29,5 +29,6 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
         Task<Template> GetDefaultTemplate(string templateKindKey, CancellationToken cancellationToken);
 
         Task SetDefaultTemplate(string templateKindKey, Guid templateId, CancellationToken cancellationToken);
+        Task SetCurrentVersion(Guid templateId, Guid templateVersionId, CancellationToken cancellationToken);
     }
 }

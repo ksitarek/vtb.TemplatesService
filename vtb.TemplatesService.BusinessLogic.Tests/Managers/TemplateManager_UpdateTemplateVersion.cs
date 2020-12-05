@@ -16,14 +16,13 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "Lorem Ipsum";
-            var isActive = true;
+            
             var ct = CancellationToken.None;
 
             var expectedTemplateVersion = new TemplateVersion()
             {
                 TemplateVersionId = templateVersionId,
-                Content = content,
-                IsActive = isActive
+                Content = content
             };
 
             _templatesRepositoryMock.Setup(x => x.TemplateExists(templateId, ct)).ReturnsAsync(true);
@@ -31,13 +30,12 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
 
             _templatesRepositoryMock.Setup(x => x.UpdateTemplateVersion(templateId, It.IsAny<TemplateVersion>(), ct));
 
-            await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, isActive, ct);
+            await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, ct);
 
             _templatesRepositoryMock.Verify(x => x.UpdateTemplateVersion(templateId,
                 It.Is<TemplateVersion>(tv =>
                     tv.TemplateVersionId == templateVersionId &&
-                    tv.Content == content &&
-                    tv.IsActive == isActive
+                    tv.Content == content
                 ), ct));
         }
 
@@ -47,7 +45,6 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "Lorem Ipsum";
-            var isActive = true;
             var ct = CancellationToken.None;
 
             _templatesRepositoryMock.Setup(x => x.TemplateExists(templateId, ct)).ReturnsAsync(true);
@@ -57,7 +54,7 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
                 .Throws(new Exception());
 
             Assert.ThrowsAsync<TemplateVersionUpdateFailedException>(async () =>
-                await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, isActive, ct));
+                await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, ct));
         }
 
         [TestCase("00000000-0000-0000-0000-000000000000", "b0dfe5bf-c621-4de3-a657-b991b9384b0f", "a")]
@@ -69,11 +66,11 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
         {
             var templateId = Guid.Parse(templateIdString);
             var templateVersionId = Guid.Parse(templateVersionIdString);
-            var isActive = true;
+            
             var ct = CancellationToken.None;
 
             Assert.ThrowsAsync<ArgumentException>(async () =>
-                await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, isActive, ct));
+                await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, ct));
         }
 
         [Test]
@@ -82,13 +79,12 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "Lorem Ipsum";
-            var isActive = true;
             var ct = CancellationToken.None;
 
             _templatesRepositoryMock.Setup(x => x.TemplateExists(templateId, ct)).ReturnsAsync(false);
             _templatesRepositoryMock.Setup(x => x.TemplateVersionExists(templateId, templateVersionId, ct)).ReturnsAsync(true);
 
-            Assert.ThrowsAsync<TemplateNotFoundException>(async () => await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, isActive, ct));
+            Assert.ThrowsAsync<TemplateNotFoundException>(async () => await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, ct));
         }
 
         [Test]
@@ -97,13 +93,12 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
             var templateId = Guid.NewGuid();
             var templateVersionId = Guid.NewGuid();
             var content = "Lorem Ipsum";
-            var isActive = true;
             var ct = CancellationToken.None;
 
             _templatesRepositoryMock.Setup(x => x.TemplateExists(templateId, ct)).ReturnsAsync(true);
             _templatesRepositoryMock.Setup(x => x.TemplateVersionExists(templateId, templateVersionId, ct)).ReturnsAsync(false);
 
-            Assert.ThrowsAsync<TemplateVersionNotFoundException>(async () => await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, isActive, ct));
+            Assert.ThrowsAsync<TemplateVersionNotFoundException>(async () => await _manager.UpdateTemplateVersion(templateId, templateVersionId, content, ct));
         }
     }
 }
