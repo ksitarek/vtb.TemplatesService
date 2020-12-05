@@ -45,12 +45,12 @@ namespace vtb.TemplatesService.DataAccess.Repositories
         {
             var result = await _collection.Aggregate()
                 .Match(x => templateKindsKeys.Contains(x.TemplateKindKey))
-                .Group(x => x.TemplateKindKey, g => new { Key = g.Key, Value = g.LongCount()})
+                .Group(x => x.TemplateKindKey, g => new { Key = g.Key, Value = g.LongCount() })
                 .ToListAsync(cancellationToken);
 
-            return templateKindsKeys.Select(x 
+            return templateKindsKeys.Select(x
                 => new KeyValuePair<string, long>(
-                    x, 
+                    x,
                     result
                         .Where(z => z.Key == x)
                         .Select(z => z.Value)
@@ -185,6 +185,18 @@ namespace vtb.TemplatesService.DataAccess.Repositories
             );
         }
 
+        public async Task SetCurrentVersion(Guid templateId, Guid templateVersionId, CancellationToken ct)
+        {
+            var template = await GetTemplateWithAllVersions(templateId, ct);
+
+            foreach (var templateVersion in template.Versions)
+            {
+                templateVersion.IsActive = templateVersion.TemplateVersionId == templateVersionId;
+            }
+
+            await UpdateTemplate(template, ct);
+        }
+
         public Task<bool> TemplateExists(Guid templateId, CancellationToken cancellationToken = default)
         {
             var filter = _filterBuilder.Eq(x => x.TenantId, _tenantIdProvider.TenantId);
@@ -266,6 +278,5 @@ namespace vtb.TemplatesService.DataAccess.Repositories
         }
 
         private FilterDefinition<Template> TenantFilter() => _filterBuilder.Eq(x => x.TenantId, _tenantIdProvider.TenantId);
-
     }
 }

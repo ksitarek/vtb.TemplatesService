@@ -39,6 +39,6 @@ namespace vtb.TemplatesService.DataAccess.Repositories
         Task UpdateTemplate(Template template, CancellationToken cancellationToken = default);
 
         Task UpdateTemplateVersion(Guid templateId, TemplateVersion templateVersion, CancellationToken cancellationToken = default);
-
+        Task SetCurrentVersion(Guid templateId, Guid templateVersionId, CancellationToken ct);
     }
 }

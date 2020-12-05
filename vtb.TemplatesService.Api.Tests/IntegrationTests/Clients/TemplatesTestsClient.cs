@@ -52,6 +52,9 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests.Clients
         internal ValueTask<TemplateDetails> GetDefaultTemplate(string templateKindKey)
             => _restClient.GetContentAsync<TemplateDetails>($"{Endpoint}/default/{templateKindKey}");
 
+        internal ValueTask<Uri> SetCurrentVersion(Guid templateId, Guid templateVersionId)
+            => _restClient.PostAsync($"{Endpoint}/{templateId}/currentVersion", templateVersionId);
+
         internal ValueTask<Uri> SetDefaultTemplate(string templateKindKey, Guid templateId)
             => _restClient.PostAsync($"{Endpoint}/default/{templateKindKey}", templateId);
     }

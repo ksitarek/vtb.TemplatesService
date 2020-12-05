@@ -21,9 +21,6 @@ namespace vtb.TemplatesService.Api.Requests
         {
             [Required]
             public string Content { get; set; }
-
-            [Required]
-            public bool IsActive { get; set; }
         }
     }
 }
