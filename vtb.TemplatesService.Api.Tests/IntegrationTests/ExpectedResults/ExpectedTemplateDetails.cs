@@ -21,10 +21,10 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests.ExpectedResults
                 TemplateId = template.TemplateId,
                 TemplateKindKey = template.TemplateKindKey,
                 Label = template.Label,
-                CurrentVersionId = template.ActiveVersion.TemplateVersionId,
-                CurrentVersion = template.ActiveVersion.Version,
-                CurrentVersionCreatedAt = template.ActiveVersion.CreatedAt,
-                CurrentVersionContent = template.ActiveVersion.Content
+                CurrentVersionId = template.ActiveVersion != null ? template.ActiveVersion.TemplateVersionId : default,
+                CurrentVersion = template.ActiveVersion != null ? template.ActiveVersion.Version : default,
+                CurrentVersionCreatedAt = template.ActiveVersion != null ? template.ActiveVersion.CreatedAt : default,
+                CurrentVersionContent = template.ActiveVersion != null ? template.ActiveVersion.Content : default
             };
         }
     }

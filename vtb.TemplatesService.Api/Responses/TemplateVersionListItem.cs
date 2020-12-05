@@ -8,5 +8,6 @@ namespace vtb.TemplatesService.Api.Responses
         public int Version { get; set; }
         public bool IsActive { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
     }
 }

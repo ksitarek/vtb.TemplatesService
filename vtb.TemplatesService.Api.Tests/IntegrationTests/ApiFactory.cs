@@ -43,8 +43,8 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
             _runner?.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

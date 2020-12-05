@@ -41,7 +41,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests.Clients
 
         internal ValueTask<Uri> UpdateTemplateVersion(Guid templateId, Guid templateVersionId,
             ExpectedUpdateTemplateVersionBody body)
-            => _restClient.PostAsync($"{Endpoint}/{templateId}/versions/{templateVersionId}", body);
+            => _restClient.PutAsync($"{Endpoint}/{templateId}/versions/{templateVersionId}", body);
 
         internal ValueTask RemoveTemplate(Guid templateId)
             => _restClient.DeleteContentAsync($"{Endpoint}/{templateId}");

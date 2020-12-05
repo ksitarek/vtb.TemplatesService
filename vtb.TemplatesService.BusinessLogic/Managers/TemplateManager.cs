@@ -282,7 +282,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
 
             try
             {
-                var templateVersionToUpdate = new TemplateVersion() { TemplateVersionId = templateVersionId, Content = content };
+                var templateVersionToUpdate = new TemplateVersion() { TemplateVersionId = templateVersionId, Content = content, UpdatedAt = _systemClock.UtcNow };
                 await _templatesRepository.UpdateTemplateVersion(templateId, templateVersionToUpdate, cancellationToken);
             }
             catch (Exception e)
@@ -297,6 +297,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             {
                 TemplateVersionId = templateVersionId,
                 CreatedAt = _systemClock.UtcNow,
+                UpdatedAt = _systemClock.UtcNow,
                 Version = 1,
                 Content = content,
                 IsActive = isActive,

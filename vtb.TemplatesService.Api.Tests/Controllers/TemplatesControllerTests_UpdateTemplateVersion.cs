@@ -25,15 +25,10 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
 
             var request = new UpdateTemplateVersion()
             {
-                TemplateId = templateId,
-                TemplateVersionId = templateVersionId,
-                Body = new UpdateTemplateVersion.UpdateTemplateVersionBody
-                {
-                    Content = content,
-                }
+                Content = content
             };
 
-            var result = await _controller.UpdateTemplateVersion(request, ct) as AcceptedAtRouteResult;
+            var result = await _controller.UpdateTemplateVersion(templateId, templateVersionId, request, ct) as AcceptedAtRouteResult;
             result.Should().NotBeNull();
             result.RouteName.Should().Be("TemplateVersionDetails");
             result.RouteValues["templateId"].Should().Be(templateId);
@@ -55,14 +50,9 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
 
             var request = new UpdateTemplateVersion()
             {
-                TemplateId = templateId,
-                TemplateVersionId = templateVersionId,
-                Body = new UpdateTemplateVersion.UpdateTemplateVersionBody
-                {
-                    Content = content,
-                }
+                Content = content
             };
-            var result = await _controller.UpdateTemplateVersion(request, ct);
+            var result = await _controller.UpdateTemplateVersion(templateId, templateVersionId, request, ct);
             result.Should().BeOfType(typeof(BadRequestResult));
         }
 
@@ -79,14 +69,9 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
 
             var request = new UpdateTemplateVersion()
             {
-                TemplateId = templateId,
-                TemplateVersionId = templateVersionId,
-                Body = new UpdateTemplateVersion.UpdateTemplateVersionBody
-                {
-                    Content = content,
-                }
+                Content = content
             };
-            var result = await _controller.UpdateTemplateVersion(request, ct);
+            var result = await _controller.UpdateTemplateVersion(templateId, templateVersionId, request, ct);
             result.Should().BeOfType(typeof(NotFoundResult));
         }
 
@@ -101,16 +86,11 @@ namespace vtb.TemplatesService.Api.Tests.Controllers
             _templateManager.Setup(x => x.UpdateTemplateVersion(templateId, templateVersionId, content, ct))
                 .ThrowsAsync(new TemplateVersionNotFoundException(templateId, templateVersionId));
 
-            var request = new UpdateTemplateVersion()
+            var request = new UpdateTemplateVersion
             {
-                TemplateId = templateId,
-                TemplateVersionId = templateVersionId,
-                Body = new UpdateTemplateVersion.UpdateTemplateVersionBody
-                {
-                    Content = content,
-                }
+                Content = content
             };
-            var result = await _controller.UpdateTemplateVersion(request, ct);
+            var result = await _controller.UpdateTemplateVersion(templateId, templateVersionId, request, ct);
             result.Should().BeOfType(typeof(NotFoundResult));
         }
     }

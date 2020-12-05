@@ -40,6 +40,11 @@ namespace vtb.TemplatesService.Api.MapperProfiles
                 {
                     opt.PreCondition(x => x.ActiveVersion != null);
                     opt.MapFrom(x => x.ActiveVersion.CreatedAt);
+                })
+                .ForMember(x => x.CurrentVersionUpdatedAt, opt =>
+                {
+                    opt.PreCondition(x => x.ActiveVersion != null);
+                    opt.MapFrom(x => x.ActiveVersion.UpdatedAt);
                 });
         }
     }

@@ -36,7 +36,7 @@ namespace vtb.TemplatesService.Api.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ListPage<TemplateListItem>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public Task<IActionResult> GetTemplates([FromQuery]int page, [FromQuery]int pageSize, CancellationToken cancellationToken)
+        public Task<IActionResult> GetTemplates([FromQuery] int page, [FromQuery] int pageSize, CancellationToken cancellationToken)
         {
             return SafeInvoke(async () =>
             {
@@ -49,7 +49,7 @@ namespace vtb.TemplatesService.Api.Controllers
         [ProducesResponseType(typeof(TemplateDetails), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public Task<IActionResult> Get([FromRoute]Guid templateId, CancellationToken cancellationToken)
+        public Task<IActionResult> Get([FromRoute] Guid templateId, CancellationToken cancellationToken)
         {
             return SafeInvoke(async () => Ok(_mapper.Map<TemplateDetails>(await _templateManager.Get(templateId, cancellationToken))));
         }
@@ -89,7 +89,7 @@ namespace vtb.TemplatesService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [RequirePermission(Permissions.ManageTemplates)]
-        public Task<IActionResult> GetTemplateVersionDetails([FromRoute]Guid templateId, [FromRoute]Guid templateVersionId, CancellationToken cancellationToken)
+        public Task<IActionResult> GetTemplateVersionDetails([FromRoute] Guid templateId, [FromRoute] Guid templateVersionId, CancellationToken cancellationToken)
         {
             return SafeInvoke(async () =>
             {
@@ -102,7 +102,7 @@ namespace vtb.TemplatesService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [RequirePermission(Permissions.ManageTemplates)]
-        public Task<IActionResult> GetTemplateVersions([FromRoute]Guid templateId, int page, int pageSize, CancellationToken cancellationToken)
+        public Task<IActionResult> GetTemplateVersions([FromRoute] Guid templateId, int page, int pageSize, CancellationToken cancellationToken)
         {
             return SafeInvoke(async () =>
             {
@@ -116,12 +116,16 @@ namespace vtb.TemplatesService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [RequirePermission(Permissions.ManageTemplates)]
-        public Task<IActionResult> UpdateTemplateVersion(UpdateTemplateVersion request, CancellationToken cancellationToken)
+        public Task<IActionResult> UpdateTemplateVersion(
+            [FromRoute] Guid templateId,
+            [FromRoute] Guid templateVersionId,
+            [FromBody] UpdateTemplateVersion updateTemplateVersionBody,
+            CancellationToken cancellationToken)
         {
             return SafeInvoke(async () =>
             {
-                await _templateManager.UpdateTemplateVersion(request.TemplateId, request.TemplateVersionId, request.Body.Content, cancellationToken);
-                return AcceptedAtRoute("TemplateVersionDetails", new { request.TemplateId, request.TemplateVersionId }, null);
+                await _templateManager.UpdateTemplateVersion(templateId, templateVersionId, updateTemplateVersionBody.Content, cancellationToken);
+                return AcceptedAtRoute("TemplateVersionDetails", new { templateId, templateVersionId }, null);
             });
         }
 
@@ -130,7 +134,7 @@ namespace vtb.TemplatesService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [RequirePermission(Permissions.ManageTemplates)]
-        public Task<IActionResult> RemoveTemplate([FromRoute]Guid templateId, CancellationToken cancellationToken)
+        public Task<IActionResult> RemoveTemplate([FromRoute] Guid templateId, CancellationToken cancellationToken)
         {
             return SafeInvoke(async () =>
             {
@@ -144,7 +148,7 @@ namespace vtb.TemplatesService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [RequirePermission(Permissions.ManageTemplates)]
-        public Task<IActionResult> RemoveTemplateVersion([FromRoute]Guid templateId, [FromRoute]Guid templateVersionId, CancellationToken cancellationToken)
+        public Task<IActionResult> RemoveTemplateVersion([FromRoute] Guid templateId, [FromRoute] Guid templateVersionId, CancellationToken cancellationToken)
         {
             return SafeInvoke(async () =>
             {
@@ -157,7 +161,7 @@ namespace vtb.TemplatesService.Api.Controllers
         [ProducesResponseType(typeof(TemplateDetails), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public Task<IActionResult> GetDefaultTemplate([FromRoute]string templateKindKey, CancellationToken cancellationToken)
+        public Task<IActionResult> GetDefaultTemplate([FromRoute] string templateKindKey, CancellationToken cancellationToken)
         {
             return SafeInvoke(async () =>
             {

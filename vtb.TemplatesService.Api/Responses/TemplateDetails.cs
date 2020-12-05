@@ -11,6 +11,7 @@ namespace vtb.TemplatesService.Api.Responses
         public Guid CurrentVersionId { get; set; }
         public int CurrentVersion { get; set; }
         public DateTimeOffset CurrentVersionCreatedAt { get; set; }
+        public DateTimeOffset CurrentVersionUpdatedAt { get; set; }
         public string CurrentVersionContent { get; set; }
     }
 }
