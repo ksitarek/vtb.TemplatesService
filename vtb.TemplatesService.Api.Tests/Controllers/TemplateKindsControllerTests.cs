@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using vtb.TemplatesService.Api.Controllers;

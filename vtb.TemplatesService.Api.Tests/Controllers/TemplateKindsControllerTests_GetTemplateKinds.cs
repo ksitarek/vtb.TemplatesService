@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using vtb.TemplatesService.Api.Responses;
 using vtb.TemplatesService.DataAccess;
 using vtb.TemplatesService.DataAccess.DTOs;
+using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.Api.Tests.Controllers
 {

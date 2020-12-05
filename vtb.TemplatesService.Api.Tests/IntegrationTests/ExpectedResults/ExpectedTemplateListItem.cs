@@ -1,4 +1,5 @@
 ﻿using System;
+using vtb.TemplatesService.Api.Requests;
 using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.Api.Tests.IntegrationTests.ExpectedResults

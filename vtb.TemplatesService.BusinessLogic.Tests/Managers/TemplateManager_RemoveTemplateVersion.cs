@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FizzWare.NBuilder;
+using MongoDB.Driver;
 using vtb.TemplatesService.BusinessLogic.Exceptions;
 using vtb.TemplatesService.DomainModel;
 
