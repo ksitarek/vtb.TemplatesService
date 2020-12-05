@@ -224,6 +224,7 @@ namespace vtb.TemplatesService.Api.Tests.MapperProfiles
                         TemplateVersionId = templateVersionId,
                         Content = "Lorem ipsun, dolor sit amet",
                         CreatedAt = dateTime,
+                        UpdatedAt = dateTime.AddDays(3),
                         Version = 1,
                         IsActive = true
                     }
@@ -239,6 +240,7 @@ namespace vtb.TemplatesService.Api.Tests.MapperProfiles
                 CurrentVersion = 1,
                 CurrentVersionContent = "Lorem ipsun, dolor sit amet",
                 CurrentVersionCreatedAt = dateTime,
+                CurrentVersionUpdatedAt = dateTime.AddDays(3)
             };
 
             var actualOutput = _mapper.Map<TemplateDetails>(input);

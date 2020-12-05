@@ -19,13 +19,6 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
             var isActive = true;
             var ct = CancellationToken.None;
 
-            var expectedTemplateVersion = new TemplateVersion()
-            {
-                TemplateVersionId = templateVersionId,
-                Content = content,
-                IsActive = isActive
-            };
-
             _templatesRepositoryMock.Setup(x => x.TemplateExists(templateId, ct)).ReturnsAsync(true);
             _templatesRepositoryMock.Setup(x => x.TemplateVersionExists(templateId, templateVersionId, ct)).ReturnsAsync(true);
 
@@ -37,7 +30,8 @@ namespace vtb.TemplatesService.BusinessLogic.Tests.Managers
                 It.Is<TemplateVersion>(tv =>
                     tv.TemplateVersionId == templateVersionId &&
                     tv.Content == content &&
-                    tv.IsActive == isActive
+                    tv.IsActive == isActive &&
+                    tv.UpdatedAt == _utcNow
                 ), ct));
         }
 

@@ -9,6 +9,7 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests.ExpectedResults
         public int Version { get; set; }
         public bool IsActive { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
 
         public static ExpectedTemplateVersionListItem From(TemplateVersion version)
         {
@@ -17,7 +18,8 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests.ExpectedResults
                 TemplateVersionId = version.TemplateVersionId,
                 Version = version.Version,
                 IsActive = version.IsActive,
-                CreatedAt = version.CreatedAt
+                CreatedAt = version.CreatedAt,
+                UpdatedAt = version.UpdatedAt
             };
         }
     }

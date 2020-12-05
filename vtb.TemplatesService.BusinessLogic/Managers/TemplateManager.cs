@@ -35,7 +35,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             Check.NotEmpty(label, nameof(label));
             Check.NotEmpty(content, nameof(content));
 
-            if (await _templatesRepository.TemplateLabelTaken(label))
+            if (await _templatesRepository.TemplateLabelTaken(label, cancellationToken))
             {
                 throw new TemplateLabelAlreadyTakenException(label);
             }
@@ -168,7 +168,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
         {
             Check.GuidNotEmpty(templateId, nameof(templateId));
 
-            if (!await _templatesRepository.TemplateExists(templateId))
+            if (!await _templatesRepository.TemplateExists(templateId, cancellationToken))
             {
                 throw new TemplateNotFoundException(templateId);
             }
@@ -239,13 +239,13 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             }
         }
 
-        public async Task UpdateTemplateVersion(Guid templateId, Guid templateVersionId, string content, bool isActive, CancellationToken cancellationToken)
+        public async Task UpdateTemplateVersion(Guid templateId, Guid templateVersionId, string content, CancellationToken cancellationToken)
         {
             Check.GuidNotEmpty(templateId, nameof(templateId));
             Check.GuidNotEmpty(templateVersionId, nameof(templateVersionId));
             Check.NotEmpty(content, nameof(content));
 
-            if (!await _templatesRepository.TemplateExists(templateId))
+            if (!await _templatesRepository.TemplateExists(templateId, cancellationToken))
             {
                 throw new TemplateNotFoundException(templateId);
             }
@@ -257,7 +257,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
 
             try
             {
-                var templateVersionToUpdate = new TemplateVersion() { TemplateVersionId = templateVersionId, Content = content, IsActive = isActive };
+                var templateVersionToUpdate = new TemplateVersion() { TemplateVersionId = templateVersionId, Content = content, UpdatedAt = _systemClock.UtcNow };
                 await _templatesRepository.UpdateTemplateVersion(templateId, templateVersionToUpdate, cancellationToken);
             }
             catch (Exception e)
@@ -272,6 +272,7 @@ namespace vtb.TemplatesService.BusinessLogic.Managers
             {
                 TemplateVersionId = templateVersionId,
                 CreatedAt = _systemClock.UtcNow,
+                UpdatedAt = _systemClock.UtcNow,
                 Version = 1,
                 Content = content,
                 IsActive = isActive,

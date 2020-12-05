@@ -31,6 +31,7 @@ namespace vtb.TemplatesService.Api.Tests.MapperProfiles
                 TemplateVersionId = Guid.NewGuid(),
                 Content = "Lorem ipsun, dolor sit amet",
                 CreatedAt = DateTimeOffset.UtcNow,
+                UpdatedAt = DateTimeOffset.UtcNow.AddDays(3),
                 Version = 1,
                 IsActive = true
             };
@@ -39,6 +40,7 @@ namespace vtb.TemplatesService.Api.Tests.MapperProfiles
             {
                 TemplateVersionId = version.TemplateVersionId,
                 CreatedAt = version.CreatedAt,
+                UpdatedAt = version.UpdatedAt,
                 Version = version.Version,
                 IsActive = version.IsActive
             };
@@ -55,6 +57,7 @@ namespace vtb.TemplatesService.Api.Tests.MapperProfiles
                 TemplateVersionId = Guid.NewGuid(),
                 Content = "Lorem ipsun, dolor sit amet",
                 CreatedAt = DateTimeOffset.UtcNow,
+                UpdatedAt = DateTimeOffset.UtcNow.AddDays(3),
                 Version = 1,
                 IsActive = true
             };
@@ -63,6 +66,7 @@ namespace vtb.TemplatesService.Api.Tests.MapperProfiles
             {
                 TemplateVersionId = version.TemplateVersionId,
                 CreatedAt = version.CreatedAt,
+                UpdatedAt = version.UpdatedAt,
                 Version = version.Version,
                 IsActive = version.IsActive,
                 Content = version.Content
