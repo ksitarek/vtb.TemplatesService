@@ -100,6 +100,18 @@ pipeline {
                 }
             }
         }
+        stage('Publish NuGet packages') {
+            steps {
+                sh 'dotnet publish vtb.TemplatesService.Contracts/vtb.TemplatesService.Contracts.csproj --no-build --no-restore -o ./out -c Release'
+                archiveArtifacts artifacts: 'out/*', fingerprint: true
+
+                sh 'dotnet pack vtb.TemplatesService.Contracts/vtb.TemplatesService.Contracts.csproj --no-build --no-restore -p:PackageVersion=${VERSION} -o . -c Release'
+                archiveArtifacts artifacts: '*.nupkg', fingerprint: true
+
+                sh 'dotnet nuget push "**/*.nupkg" -s BaGet -k ${BAGET_API_KEY}'
+            }
+        }
+        
         stage('Run Release') {
             when {
                 expression { BRANCH_NAME == 'master' }

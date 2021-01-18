@@ -1,103 +1,87 @@
-﻿using CommandLine;
+﻿using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System;
-using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using vtb.TemplatesService.BusinessLogic;
-using vtb.TemplatesService.DataAccess.Repositories;
+using vtb.TemplatesService.BusinessLogic.RequestHandlers;
+using vtb.TemplatesService.BusinessLogic.Requests;
 
 namespace vtb.TemplatesService.Service
 {
-    internal static class Program
+    internal class Program
     {
-        private static IConfigurationRoot Configuration;
-        private static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-
         private static async Task Main(string[] args)
         {
-            await Parser.Default.ParseArguments<CliOptions>(args)
-                    .WithParsedAsync(Run);
+            var builder = new HostBuilder()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddJsonFile("appsettings.json", true);
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    // configuration
+                    services.Configure<BusConfiguration>(hostContext.Configuration.GetSection("RabbitMq"));
+                    services.Configure<MongoDbConfiguration>(hostContext.Configuration.GetSection("MongoDb"));
 
-            Console.CancelKeyPress += (sender, args) => _cancellationTokenSource.Cancel();
+                    ConfigureMongodb(services);
+
+                    ConfigureMassTransit(services, hostContext);
+
+                    services.AddHostedService<TemplatesHostedService>();
+                })
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                });
+
+            await builder.RunConsoleAsync();
         }
 
-        private static void ConfigureServices(IServiceCollection services)
+        private static void ConfigureMassTransit(IServiceCollection services, HostBuilderContext hostContext)
         {
-            // configuration
-            services.Configure<BusConfiguration>(Configuration.GetSection("Bus"));
-            services.Configure<MongoDbConfiguration>(Configuration.GetSection("MongoDb"));
+            services.AddMassTransit(cfg =>
+            {
+                cfg.SetKebabCaseEndpointNameFormatter();
 
-            // consumers
+                cfg.AddConsumer<GetDefaultTemplateRequestHandler>();
+                cfg.AddRequestClient<IGetDefaultTemplateRequest>();
 
-            // repositories
-            services.AddTransient<ITemplateKindsRepository, TemplateKindsRepository>();
+                cfg.UsingRabbitMq((x, y) =>
+                {
+                    var rmqConfig = hostContext.Configuration.GetSection("RabbitMq").Get<BusConfiguration>();
 
-            // mongo db
+                    y.Host(rmqConfig.Host, rmqConfig.VirtualHost, h =>
+                    {
+                        h.Username(rmqConfig.UserName);
+                        h.Password(rmqConfig.Password);
+                    });
+
+                    y.ConfigureEndpoints(x);
+                });
+            });
+        }
+
+        private static void ConfigureMongodb(IServiceCollection services)
+        {
             services.AddSingleton((sp) =>
             {
-                var mongoOptions = sp.GetService<IOptions<MongoDbConfiguration>>();
-                return new MongoClient(mongoOptions.Value.ConnectionString);
+                var mongodbOptions = sp.GetRequiredService<IOptions<MongoDbConfiguration>>();
+                return new MongoClient(mongodbOptions.Value.ConnectionString);
             });
 
             services.AddTransient((sp) =>
             {
-                var mongoOptions = sp.GetService<IOptions<MongoDbConfiguration>>();
-                var mongoClient = sp.GetService<MongoClient>();
-                var database = mongoClient.GetDatabase(mongoOptions.Value.DatabaseName);
+                var mongodbConfig = sp.GetRequiredService<IOptions<MongoDbConfiguration>>();
+                var mongodbClient = sp.GetRequiredService<MongoClient>();
+                var database = mongodbClient.GetDatabase(mongodbConfig.Value.DatabaseName);
 
                 return database;
             });
-        }
-
-        private static async Task Run(CliOptions cliOptions)
-        {
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddTransient<Application>();
-
-            ConfigureConfiguration(serviceCollection, cliOptions.Configuration);
-            ConfigureLogging(serviceCollection);
-            ConfigureServices(serviceCollection);
-
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-            await serviceProvider.GetService<Application>().RunAsync(_cancellationTokenSource.Token);
-        }
-
-        private static void ConfigureLogging(IServiceCollection services)
-        {
-            var loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder.AddConsole();
-                builder.AddDebug();
-
-                builder.AddConfiguration(Configuration.GetSection("Logging"));
-            });
-
-            services.AddSingleton(loggerFactory);
-            services.AddLogging();
-        }
-
-        private static void ConfigureConfiguration(IServiceCollection services, string configurationOption)
-        {
-            var configurationBuilder = new ConfigurationBuilder()
-                            .SetBasePath(Directory.GetCurrentDirectory())
-                            .AddJsonFile("appsettings.json", false)
-                            .AddUserSecrets(typeof(Program).Assembly);
-
-            configurationBuilder.AddJsonFile($"appsettings.{configurationOption}.json", configurationOption == "Release");
-
-            Configuration = configurationBuilder.Build();
-            services.AddOptions();
-        }
-
-        private class CliOptions
-        {
-            [Option('c', "configuration", Default = "Release", HelpText = "Chooses which configuration will be loaded.")]
-            public string Configuration { get; set; }
         }
     }
 }
