@@ -8,7 +8,7 @@ using MongoDB.Driver;
 using System.Threading.Tasks;
 using vtb.TemplatesService.BusinessLogic;
 using vtb.TemplatesService.BusinessLogic.RequestHandlers;
-using vtb.TemplatesService.BusinessLogic.Requests;
+using vtb.TemplatesService.Contracts.Requests;
 
 namespace vtb.TemplatesService.Service
 {
