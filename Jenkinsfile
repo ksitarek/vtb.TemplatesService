@@ -1,7 +1,7 @@
 properties([pipelineTriggers([githubPush()])])
 
 pipeline {
-    agent { dockerfile true }
+    agent { dockerfile { filename 'Dockerfile.build' } }
     environment {
         PROJECT_KEY = "vtb-templatesservice"
         SONARQUBE_TOKEN = credentials('SONARQUBE_TOKEN');

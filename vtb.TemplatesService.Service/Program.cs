@@ -7,8 +7,10 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using vtb.TemplatesService.BusinessLogic;
+using vtb.TemplatesService.BusinessLogic.Managers;
 using vtb.TemplatesService.BusinessLogic.RequestHandlers;
 using vtb.TemplatesService.Contracts.Requests;
+using vtb.TemplatesService.DataAccess.Repositories;
 
 namespace vtb.TemplatesService.Service
 {
@@ -27,8 +29,15 @@ namespace vtb.TemplatesService.Service
                     services.Configure<BusConfiguration>(hostContext.Configuration.GetSection("RabbitMq"));
                     services.Configure<MongoDbConfiguration>(hostContext.Configuration.GetSection("MongoDb"));
 
-                    ConfigureMongodb(services);
+                    // managers
+                    services.AddTransient<ITemplateKindManager, TemplateKindManager>();
+                    services.AddTransient<ITemplateManager, TemplateManager>();
 
+                    // repositories
+                    services.AddTransient<ITemplateKindsRepository, TemplateKindsRepository>();
+                    services.AddTransient<ITemplatesRepository, TemplatesRepository>();
+
+                    ConfigureMongodb(services);
                     ConfigureMassTransit(services, hostContext);
 
                     services.AddHostedService<TemplatesHostedService>();
