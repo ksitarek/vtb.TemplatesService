@@ -1,11 +1,15 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using vtb.Auth.Jwt;
@@ -39,6 +43,9 @@ namespace vtb.TemplatesService.Api
             services.AddAutoMapper(typeof(Startup).Assembly);
 
             // configuration
+            var mongoDbConfiguration = new MongoDbConfiguration();
+            Configuration.GetSection("MongoDb").Bind(mongoDbConfiguration);
+
             //services.Configure<BusConfiguration>(Configuration.GetSection("Bus"));
             services.Configure<MongoDbConfiguration>(Configuration.GetSection("MongoDb"));
             services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
@@ -51,18 +58,21 @@ namespace vtb.TemplatesService.Api
             services.AddTransient<ITemplateKindsRepository, TemplateKindsRepository>();
             services.AddTransient<ITemplatesRepository, TemplatesRepository>();
 
+            services.AddHealthChecks()
+                .AddMongoDb(
+                    mongodbConnectionString: mongoDbConfiguration.ConnectionString,
+                    mongoDatabaseName: mongoDbConfiguration.DatabaseName,
+                    name: "MongoDB-check",
+                    tags: new[] { "mongodb" },
+                    timeout: TimeSpan.FromSeconds(1));
+
             // mongo db
-            services.AddSingleton((sp) =>
-            {
-                var mongoOptions = sp.GetService<IOptions<MongoDbConfiguration>>();
-                return new MongoClient(mongoOptions.Value.ConnectionString);
-            });
+            services.AddSingleton((sp) => new MongoClient(mongoDbConfiguration.ConnectionString));
 
             services.AddTransient((sp) =>
             {
-                var mongoOptions = sp.GetService<IOptions<MongoDbConfiguration>>();
-                var mongoClient = sp.GetService<MongoClient>();
-                var database = mongoClient.GetDatabase(mongoOptions.Value.DatabaseName);
+                var mongodbClient = sp.GetRequiredService<MongoClient>();
+                var database = mongodbClient.GetDatabase(mongoDbConfiguration.DatabaseName);
 
                 return database;
             });
@@ -149,6 +159,10 @@ namespace vtb.TemplatesService.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+                {
+                    ResponseWriter = HealthResponseWriter
+                });
                 endpoints.MapControllers();
             });
 
@@ -166,6 +180,22 @@ namespace vtb.TemplatesService.Api
 
                 Task.WaitAll(tasks);
             }
+        }
+
+        private static Task HealthResponseWriter(HttpContext context, HealthReport healthReport)
+        {
+            context.Response.ContentType = "application/json";
+
+            var result = JsonConvert.SerializeObject(new
+            {
+                status = healthReport.Status.ToString(),
+                errors = healthReport.Entries.Select(e => new
+                {
+                    key = e.Key,
+                    value = e.Value.Status.ToString()
+                })
+            });
+            return context.Response.WriteAsync(result);
         }
     }
 }
