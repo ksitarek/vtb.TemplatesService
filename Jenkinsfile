@@ -61,6 +61,15 @@ pipeline {
                         /p:CoverletOutput=vtb.TemplatesService.BusinessLogic.Tests/
                 '''
                 sh '''\
+                    dotnet test vtb.TemplatesService.Contracts.Tests/vtb.TemplatesService.Contracts.Tests.csproj \
+                        -c Release \
+                        --no-build \
+                        --logger "trx" \
+                        /p:CollectCoverage=true \
+                        /p:CoverletOutputFormat="opencover" \
+                        /p:CoverletOutput=vtb.TemplatesService.Contracts.Tests/
+                '''
+                sh '''\
                     dotnet test vtb.TemplatesService.DataAccess.Tests/vtb.TemplatesService.DataAccess.Tests.csproj \
                         -c Release \
                         --no-build \

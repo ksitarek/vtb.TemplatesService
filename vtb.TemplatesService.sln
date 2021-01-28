@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vtb.TemplatesService.DataAc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vtb.TemplatesService.Contracts", "vtb.TemplatesService.Contracts\vtb.TemplatesService.Contracts.csproj", "{68C148CC-B14F-4B61-8A97-3856FADB3588}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vtb.TemplatesService.Contracts.Tests", "vtb.TemplatesService.Contracts.Tests\vtb.TemplatesService.Contracts.Tests.csproj", "{8898270F-7548-4787-8451-6FDFB59B6D87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,18 @@ Global
 		{68C148CC-B14F-4B61-8A97-3856FADB3588}.Release|x64.Build.0 = Release|Any CPU
 		{68C148CC-B14F-4B61-8A97-3856FADB3588}.Release|x86.ActiveCfg = Release|Any CPU
 		{68C148CC-B14F-4B61-8A97-3856FADB3588}.Release|x86.Build.0 = Release|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Debug|x64.Build.0 = Debug|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Debug|x86.Build.0 = Debug|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Release|x64.ActiveCfg = Release|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Release|x64.Build.0 = Release|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Release|x86.ActiveCfg = Release|Any CPU
+		{8898270F-7548-4787-8451-6FDFB59B6D87}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
