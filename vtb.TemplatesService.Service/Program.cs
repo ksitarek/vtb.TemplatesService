@@ -1,11 +1,11 @@
-﻿using MassTransit;
+﻿using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System.Threading.Tasks;
 using vtb.TemplatesService.BusinessLogic;
 using vtb.TemplatesService.BusinessLogic.Managers;
 using vtb.TemplatesService.BusinessLogic.RequestHandlers;
@@ -16,12 +16,21 @@ namespace vtb.TemplatesService.Service
 {
     internal class Program
     {
+        private const string DEV_DOCKER = "dev-docker";
+
         private static async Task Main(string[] args)
         {
             var builder = new HostBuilder()
-                .ConfigureAppConfiguration((hostingContext, config) =>
+                .ConfigureAppConfiguration((hostingContext, configuration) =>
                 {
-                    config.AddJsonFile("appsettings.json", true);
+                    configuration.AddJsonFile("appsettings.json", true);
+                    if (hostingContext.HostingEnvironment.EnvironmentName == DEV_DOCKER)
+                    {
+                        configuration.AddJsonFile(
+                            path: "appsettings.Dev-Docker.json",
+                            optional: false,
+                            reloadOnChange: true);
+                    }
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -58,11 +67,12 @@ namespace vtb.TemplatesService.Service
                 cfg.SetKebabCaseEndpointNameFormatter();
 
                 cfg.AddConsumer<GetDefaultTemplateRequestHandler>();
-                cfg.AddRequestClient<IGetDefaultTemplateRequest>();
+                cfg.AddRequestClient<GetDefaultTemplateRequest>();
 
                 cfg.UsingRabbitMq((x, y) =>
                 {
-                    var rmqConfig = hostContext.Configuration.GetSection("RabbitMq").Get<BusConfiguration>();
+                    var rmqConfig = new BusConfiguration();
+                    hostContext.Configuration.GetSection("RabbitMq").Bind(rmqConfig);
 
                     y.Host(rmqConfig.Host, rmqConfig.VirtualHost, h =>
                     {

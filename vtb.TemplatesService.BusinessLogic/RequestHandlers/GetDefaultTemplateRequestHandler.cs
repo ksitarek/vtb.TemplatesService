@@ -1,6 +1,6 @@
-﻿using MassTransit;
+﻿using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 using vtb.TemplatesService.BusinessLogic.Exceptions;
 using vtb.TemplatesService.BusinessLogic.Managers;
 using vtb.TemplatesService.Contracts.Requests;
@@ -9,7 +9,7 @@ using vtb.TemplatesService.DomainModel;
 
 namespace vtb.TemplatesService.BusinessLogic.RequestHandlers
 {
-    public class GetDefaultTemplateRequestHandler : IConsumer<IGetDefaultTemplateRequest>
+    public class GetDefaultTemplateRequestHandler : IConsumer<GetDefaultTemplateRequest>
     {
         private readonly ILogger<GetDefaultTemplateRequestHandler> _logger;
         private readonly ITemplateManager _templateManager;
@@ -20,7 +20,7 @@ namespace vtb.TemplatesService.BusinessLogic.RequestHandlers
             _templateManager = templateManager;
         }
 
-        public async Task Consume(ConsumeContext<IGetDefaultTemplateRequest> context)
+        public async Task Consume(ConsumeContext<GetDefaultTemplateRequest> context)
         {
             using (_logger.BeginScope("Retrieve default template for key {templateKindKey}",
                 context.Message.TemplateKindKey))
@@ -39,7 +39,7 @@ namespace vtb.TemplatesService.BusinessLogic.RequestHandlers
                 _logger.LogDebug("For kind {templateKindKey} default template is {templateId} and version is {templateVersionId}",
                     context.Message.TemplateKindKey, defaultTemplate.TemplateId, defaultTemplate.ActiveVersion?.TemplateVersionId);
 
-                await context.RespondAsync<IDefaultTemplateResponse>(new
+                await context.RespondAsync<DefaultTemplateResponse>(new
                 {
                     TemplateId = defaultTemplate.TemplateId,
                     TemplateVersionId = defaultTemplate.ActiveVersion?.TemplateVersionId
