@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Mongo2Go;
 using Moq;
-using System;
 
 namespace vtb.TemplatesService.Api.Tests.IntegrationTests
 {
@@ -18,18 +21,22 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            base.ConfigureWebHost(builder);
-
             _runner = MongoDbRunner.Start();
 
             builder.UseEnvironment("Release");
 
-            builder.UseSetting("MongoDb:ConnectionString", _runner.ConnectionString);
-            builder.UseSetting("MongoDb:DatabaseName", Guid.NewGuid().ToString());
+            builder.ConfigureAppConfiguration((ctx, config) =>
+            {
+                config.AddInMemoryCollection(new Dictionary<string, string>()
+                {
+                    ["MongoDb:ConnectionString"] = _runner.ConnectionString,
+                    ["MongoDb:DatabaseName"] = Guid.NewGuid().ToString(),
 
-            builder.UseSetting("Jwt:Secret", new string('#', 1000));
-            builder.UseSetting("Jwt:JwtTokenLifespan", TimeSpan.FromMinutes(5).ToString());
-            builder.UseSetting("Jwt:RefreshTokenLifespan", TimeSpan.FromHours(7).ToString());
+                    ["Jwt:Secret"] = new string('#', 1000),
+                    ["Jwt:JwtTokenLifespan"] = TimeSpan.FromMinutes(5).ToString(),
+                    ["Jwt:RefreshTokenLifespan"] = TimeSpan.FromMinutes(7).ToString(),
+                });
+            });
 
             builder.ConfigureTestServices((services) =>
             {
@@ -39,6 +46,8 @@ namespace vtb.TemplatesService.Api.Tests.IntegrationTests
                 var sd = new ServiceDescriptor(typeof(ISystemClock), _ => systemClockMock.Object, ServiceLifetime.Transient);
                 services.Replace(sd);
             });
+
+            base.ConfigureWebHost(builder);
         }
 
         protected override void Dispose(bool disposing)
