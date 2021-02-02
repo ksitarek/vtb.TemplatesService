@@ -4,6 +4,10 @@
     {
         public string TemplateKindKey { get; }
 
+        public GetDefaultTemplateRequest()
+        {
+        }
+
         public GetDefaultTemplateRequest(string templateKindKey)
         {
             TemplateKindKey = templateKindKey;

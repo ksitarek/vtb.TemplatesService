@@ -7,6 +7,10 @@ namespace vtb.TemplatesService.Contracts.Responses
         public Guid TemplateId { get; }
         public Guid TemplateVersionId { get; }
 
+        public DefaultTemplateResponse()
+        {
+        }
+
         public DefaultTemplateResponse(Guid templateId, Guid templateVersionId)
         {
             TemplateId = templateId;

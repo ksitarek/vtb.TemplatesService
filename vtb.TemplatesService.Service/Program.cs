@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +24,7 @@ namespace vtb.TemplatesService.Service
             var builder = new HostBuilder()
                 .ConfigureAppConfiguration((hostingContext, configuration) =>
                 {
-                    configuration.AddJsonFile("appsettings.json", true);
-                    if (hostingContext.HostingEnvironment.EnvironmentName == DEV_DOCKER)
+                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == DEV_DOCKER)
                     {
                         configuration.AddJsonFile(
                             path: "appsettings.Dev-Docker.json",
