@@ -47,5 +47,18 @@ namespace vtb.TemplatesService.Contracts.Tests
             propertiesWithPublicGetters.Count().ShouldBe(properties.Length, @type.FullName);
             propertiesWithSetters.Count().ShouldBe(0, @type.FullName);
         }
+
+        [TestCaseSource(nameof(AllContractTypes))]
+        public void No_Contract_Types_Have_Parameterless_Constructor(Type @type)
+        {
+            var parameterlessConstructor = @type.GetConstructor(Type.EmptyTypes);
+            parameterlessConstructor.ShouldBeNull(@type.FullName);
+        }
+
+        [TestCaseSource(nameof(AllContractTypes))]
+        public void All_Contract_Types_Have_Only_Single_Constructor(Type @type)
+        {
+            @type.GetConstructors().Length.ShouldBe(1);
+        }
     }
 }
