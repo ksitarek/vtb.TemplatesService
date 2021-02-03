@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using vtb.Auth.Tenant;
+using vtb.Auth.Tenant.MessagingFilters;
 using vtb.TemplatesService.BusinessLogic;
 using vtb.TemplatesService.BusinessLogic.Managers;
 using vtb.TemplatesService.BusinessLogic.RequestHandlers;
@@ -79,18 +80,20 @@ namespace vtb.TemplatesService.Service
                 cfg.AddConsumer<GetDefaultTemplateRequestHandler>();
                 cfg.AddRequestClient<GetDefaultTemplateRequest>();
 
-                cfg.UsingRabbitMq((x, y) =>
+                cfg.UsingRabbitMq((busRegistrationContext, busFactoryConfigurator) =>
                 {
                     var rmqConfig = new BusConfiguration();
                     hostContext.Configuration.GetSection("RabbitMq").Bind(rmqConfig);
 
-                    y.Host(rmqConfig.Host, rmqConfig.VirtualHost, h =>
+                    busFactoryConfigurator.UseConsumeFilter(typeof(TenantConsumeFilter<>), busRegistrationContext);
+
+                    busFactoryConfigurator.Host(rmqConfig.Host, rmqConfig.VirtualHost, h =>
                     {
                         h.Username(rmqConfig.UserName);
                         h.Password(rmqConfig.Password);
                     });
 
-                    y.ConfigureEndpoints(x);
+                    busFactoryConfigurator.ConfigureEndpoints(busRegistrationContext);
                 });
             });
         }
