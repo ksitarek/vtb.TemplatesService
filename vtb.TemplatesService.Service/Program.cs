@@ -7,11 +7,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using vtb.Auth.Tenant;
 using vtb.TemplatesService.BusinessLogic;
 using vtb.TemplatesService.BusinessLogic.Managers;
 using vtb.TemplatesService.BusinessLogic.RequestHandlers;
 using vtb.TemplatesService.Contracts.Requests;
 using vtb.TemplatesService.DataAccess.Repositories;
+using vtb.Utils.Extensions;
 
 namespace vtb.TemplatesService.Service
 {
@@ -24,6 +26,11 @@ namespace vtb.TemplatesService.Service
             var builder = new HostBuilder()
                 .ConfigureAppConfiguration((hostingContext, configuration) =>
                 {
+                    configuration.AddJsonFile(
+                        path: "appsettings.json",
+                        optional: false,
+                        reloadOnChange: true);
+
                     if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == DEV_DOCKER)
                     {
                         configuration.AddJsonFile(
@@ -34,6 +41,9 @@ namespace vtb.TemplatesService.Service
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddVtbPrerequisites();
+                    services.AddTenantProvider();
+
                     // configuration
                     services.Configure<BusConfiguration>(hostContext.Configuration.GetSection("RabbitMq"));
                     services.Configure<MongoDbConfiguration>(hostContext.Configuration.GetSection("MongoDb"));

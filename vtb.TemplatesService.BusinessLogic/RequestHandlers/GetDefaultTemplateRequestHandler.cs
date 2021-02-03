@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using vtb.TemplatesService.BusinessLogic.Exceptions;
@@ -29,21 +30,30 @@ namespace vtb.TemplatesService.BusinessLogic.RequestHandlers
 
                 try
                 {
-                    defaultTemplate = await _templateManager.GetDefaultTemplate(context.Message.TemplateKindKey, context.CancellationToken);
+                    defaultTemplate = await _templateManager.GetDefaultTemplate(context.Message.TemplateKindKey,
+                        context.CancellationToken);
+
+                    _logger.LogDebug("For kind {templateKindKey} default template is {templateId} and version is {templateVersionId}",
+                        context.Message.TemplateKindKey, defaultTemplate.TemplateId, defaultTemplate.ActiveVersion?.TemplateVersionId);
+
+                    await context.RespondAsync(new DefaultTemplateResponse(
+                        defaultTemplate.TemplateId,
+                        defaultTemplate.ActiveVersion?.TemplateVersionId ?? Guid.Empty));
                 }
                 catch (TemplateKindNotFoundException e)
                 {
-                    _logger.LogError("Template kind with key {templateKindKey} was not found.", context.Message.TemplateKindKey);
+                    _logger.LogError("Template kind with key {templateKindKey} was not found.",
+                        context.Message.TemplateKindKey);
+
+                    await context.RespondAsync(new DefaultTemplateResponse(Guid.Empty, Guid.Empty));
                 }
-
-                _logger.LogDebug("For kind {templateKindKey} default template is {templateId} and version is {templateVersionId}",
-                    context.Message.TemplateKindKey, defaultTemplate.TemplateId, defaultTemplate.ActiveVersion?.TemplateVersionId);
-
-                await context.RespondAsync<DefaultTemplateResponse>(new
+                catch (TemplateNotFoundException e)
                 {
-                    TemplateId = defaultTemplate.TemplateId,
-                    TemplateVersionId = defaultTemplate.ActiveVersion?.TemplateVersionId
-                });
+                    _logger.LogError("Default template for kind {templateKindKey} was not found.",
+                        context.Message.TemplateKindKey);
+
+                    await context.RespondAsync(new DefaultTemplateResponse(Guid.Empty, Guid.Empty));
+                }
             }
         }
     }

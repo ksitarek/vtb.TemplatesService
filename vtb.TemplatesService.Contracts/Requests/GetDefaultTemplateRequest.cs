@@ -1,13 +1,12 @@
-﻿namespace vtb.TemplatesService.Contracts.Requests
+﻿using System.Text.Json.Serialization;
+
+namespace vtb.TemplatesService.Contracts.Requests
 {
     public class GetDefaultTemplateRequest
     {
         public string TemplateKindKey { get; }
 
-        public GetDefaultTemplateRequest()
-        {
-        }
-
+        [JsonConstructor]
         public GetDefaultTemplateRequest(string templateKindKey)
         {
             TemplateKindKey = templateKindKey;

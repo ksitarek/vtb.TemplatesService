@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace vtb.TemplatesService.Contracts.Responses
 {
@@ -7,10 +8,7 @@ namespace vtb.TemplatesService.Contracts.Responses
         public Guid TemplateId { get; }
         public Guid TemplateVersionId { get; }
 
-        public DefaultTemplateResponse()
-        {
-        }
-
+        [JsonConstructor]
         public DefaultTemplateResponse(Guid templateId, Guid templateVersionId)
         {
             TemplateId = templateId;
